@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Trabalhos realizados por Marimaras Paz — tranças, unhas, tratamentos e beleza.">
+  <meta property="og:title" content="Trabalhos | Marimaras Paz">
+  <meta property="og:image" content="assets/logo.jpg">
+  <title>Trabalhos | Marimaras Paz</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="icon" href="assets/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="announce-bar" id="announceBar">
+    <a href="booking.html" class="announce-link" data-i18n="announce">Agende o seu horário • 938 565 536</a>
+  </div>
+
+  <header class="site-header" id="siteHeader">
+    <div class="header-inner">
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span class="ham-line"></span>
+        <span class="ham-line"></span>
+        <span class="ham-line"></span>
+      </button>
+      <a href="index.html" class="brand">
+        <span class="brand-primary">MARIMARAS PAZ</span>
+        <span class="brand-secondary">ESTÉTICA E BELEZA</span>
+      </a>
+      <nav class="desktop-nav">
+        <a href="index.html" data-i18n="nav_home">Início</a>
+        <a href="works.html" class="active">Trabalhos</a>
+        <a href="index.html#servicos" data-i18n="nav_services">Serviços</a>
+        <a href="products.html" data-i18n="nav_products">Produtos</a>
+        <a href="about.html" data-i18n="nav_about">Sobre</a>
+        <a href="booking.html" data-i18n="nav_book">Agendar</a>
+        <a href="index.html#contacto" data-i18n="nav_contact">Contacto</a>
+      </nav>
+      <div class="header-actions">
+        <button class="lang-toggle" id="langToggle">EN</button>
+        <button class="cart-btn" id="cartBtn" aria-label="Carrinho">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 6h15l-1.5 9h-12z"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/><path d="M6 6L5 3H2"/></svg>
+          <span class="cart-count" data-count="0"></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="drawer-overlay" id="drawerOverlay"></div>
+  <aside class="drawer" id="drawer">
+    <div class="drawer-header">
+      <div class="drawer-brand">
+        <span class="brand-primary">MARIMARAS PAZ</span>
+        <span class="brand-secondary">ESTÉTICA E BELEZA</span>
+      </div>
+      <button class="drawer-close" id="drawerClose" aria-label="Fechar">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <nav class="drawer-nav">
+      <a href="index.html" data-i18n="nav_home">Início</a>
+      <a href="works.html" class="active">Trabalhos</a>
+      <a href="index.html#servicos" data-i18n="nav_services">Serviços</a>
+      <a href="products.html" data-i18n="nav_products">Produtos</a>
+      <a href="about.html" data-i18n="nav_about">Sobre</a>
+        <a href="booking.html" data-i18n="nav_book">Agendar</a>
+      <a href="index.html#contacto" data-i18n="nav_contact">Contacto</a>
+    </nav>
+    <div class="drawer-footer">
+      <a href="booking.html" class="btn btn-primary" data-i18n="cta_book">Agendar horário</a>
+      <div class="drawer-social">
+        <a href="https://www.instagram.com/marimaraspaz/" target="_blank" rel="noopener" aria-label="Instagram">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor"/></svg>
+        </a>
+        <a href="https://www.facebook.com/profile.php?id=61579383685594" target="_blank" rel="noopener" aria-label="Facebook">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+        </a>
+      </div>
+    </div>
+  </aside>
+
+  <div class="cart-overlay" id="cartOverlay"></div>
+  <aside class="cart-panel" id="cartPanel">
+    <div class="cart-header">
+      <h2 data-i18n="cart_title">Carrinho</h2>
+      <button class="cart-close" id="cartClose" aria-label="Fechar">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="cart-items" id="cartItems"><p class="cart-empty" data-i18n="cart_empty">O seu carrinho está vazio</p></div>
+        <div class="cart-footer">
+      <div class="cart-total">
+        <span data-i18n="cart_total">Total</span>
+        <span id="cartTotal">0 Kz</span>
+      </div>
+      <a href="checkout.html" class="btn btn-primary" data-i18n="cart_checkout">Finalizar compra</a>
+      <button type="button" class="btn btn-ghost" id="clearCartBtn" data-i18n="cart_clear">Limpar carrinho</button>
+      <button type="button" class="btn btn-ghost cart-continue" data-close-cart data-i18n="cart_continue">Continuar a comprar</button>
+    </div>
+  </aside>
+
+  <main class="works-page">
+    <!-- Instagram-style profile header -->
+    <div class="works-profile">
+      <img class="works-avatar" src="assets/logo.jpg" alt="Marimaras Paz">
+      <div class="works-profile-info">
+        <h1>Marimaras Paz</h1>
+        <p class="works-profile-tag">Estética e Beleza</p>
+        <p class="works-profile-bio">
+          <span data-i18n="works_tagline">Realçamos a beleza que há em si.</span><br>
+          <span data-i18n="works_sub">Tranças, unhas, tratamentos e produtos — com cuidado, carinho e dedicação.</span>
+        </p>
+        <div class="works-profile-links">
+          <a href="https://www.instagram.com/marimaraspaz/" target="_blank" rel="noopener">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/></svg>
+            Instagram
+          </a>
+          <a href="https://www.facebook.com/profile.php?id=61579383685594" target="_blank" rel="noopener">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+            Facebook
+          </a>
+          <a href="https://wa.me/244938565536" target="_blank" rel="noopener">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 21l1.65-3.8a9 9 0 1 1 3.4 2.9L3 21"/></svg>
+            WhatsApp
+          </a>
+          <a href="booking.html">
+            Agendar
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Image grid — no likes, no comments -->
+    <div class="works-gallery">
+      <div class="works-card-video" data-video="assets/work-nails-stiletto.mp4" role="button" tabindex="0" aria-label="Ver vídeo stiletto">
+        <img src="assets/poster-nails.jpg" alt="Vídeo — alongamento stiletto rosa" loading="lazy" width="540" height="960">
+        <button type="button" class="works-play" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+        </button>
+      </div>
+      <div class="works-card-video" data-video="assets/work-pedicure.mp4" role="button" tabindex="0" aria-label="Ver vídeo pedicure">
+        <img src="assets/poster-pedi.jpg" alt="Vídeo — pedicure" loading="lazy" width="540" height="960">
+        <button type="button" class="works-play" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+        </button>
+      </div>
+      <div class="works-card-video" data-video="assets/work-hospitality.mp4" role="button" tabindex="0" aria-label="Ver vídeo hospitalidade">
+        <img src="assets/poster-hospitality.jpg" alt="Vídeo — hospitalidade no salão" loading="lazy" width="540" height="960">
+        <button type="button" class="works-play" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+        </button>
+      </div>
+
+      <figure>
+        <img src="assets/w-nails-stiletto-3.jpg" alt="Stiletto pink nails" loading="lazy" width="478" height="850">
+      </figure>
+      <figure>
+        <img src="assets/w-nails-french-pink.jpg" alt="Unhas french rosa com detalhes florais" loading="lazy" width="600" height="600">
+      </figure>
+      <figure>
+        <img src="assets/w-braids-girl-long.jpg" alt="Tranças longas com cachos" loading="lazy" width="600" height="600">
+      </figure>
+      <figure>
+        <img src="assets/w-nails-ombre-white.jpg" alt="Alongamento ombré branco" loading="lazy" width="600" height="600">
+      </figure>
+      <figure>
+        <img src="assets/w-hair-straight-silk.jpg" alt="Cabelo liso e sedoso" loading="lazy" width="600" height="600">
+      </figure>
+      <figure>
+        <img src="assets/w-braids-kids-cornrows.jpg" alt="Tranças para crianças — cornrows" loading="lazy" width="600" height="600">
+      </figure>
+      <figure>
+        <img src="assets/w-nails-blue-floral.jpg" alt="Unhas azuis com decoração floral" loading="lazy" width="600" height="600">
+      </figure>
+      <figure>
+        <img src="assets/w-hair-long-straight.jpg" alt="Alongamento capilar longo" loading="lazy" width="600" height="600">
+      </figure>
+      <figure>
+        <img src="assets/w-nails-burgundy.jpg" alt="Unhas burgundy" loading="lazy" width="600" height="600">
+      </figure>
+      <figure>
+        <img src="assets/w-braids-box-short.jpg" alt="Box braids curtas" loading="lazy" width="600" height="600">
+      </figure>
+      <figure>
+        <img src="assets/w-hair-bob-layers.jpg" alt="Corte bob em camadas" loading="lazy" width="600" height="600">
+      </figure>
+      <figure>
+        <img src="assets/w-nails-red-gelinho.jpg" alt="Gelinho normal vermelho" loading="lazy" width="600" height="600">
+      </figure>
+      <figure>
+        <img src="assets/w-hair-before-after.jpg" alt="Antes e depois — tratamento capilar" loading="lazy" width="600" height="600">
+      </figure>
+      <figure>
+        <img src="assets/w-nails-french-collage.jpg" alt="Unhas french — trabalhos" loading="lazy" width="600" height="600">
+      </figure>
+      <figure>
+        <img src="assets/w-braids-viradas-men.jpg" alt="Viradas masculinas" loading="lazy" width="600" height="600">
+      </figure>
+      <figure>
+        <img src="assets/w-hair-bun-kids.jpg" alt="Coque e tranças para criança" loading="lazy" width="600" height="600">
+      </figure>
+      <figure>
+        <img src="assets/w-client-short-natural.jpg" alt="Cliente satisfeita — corte natural" loading="lazy" width="600" height="600">
+      </figure>
+    </div>
+
+    <div style="text-align:center;padding:2.5rem 1.5rem 3.5rem;">
+      <a href="booking.html" class="btn btn-primary" data-i18n="cta_book">Agendar horário</a>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-signup">
+        <span class="footer-label" data-i18n="footer_signup">Receba novidades e promoções</span>
+        <form class="newsletter-form" id="whatsappSubscribe" action="#" method="post">
+          <input type="tel" name="whatsapp" id="subWhatsapp" inputmode="tel" autocomplete="tel"
+            placeholder="O seu número WhatsApp" data-i18n-placeholder="footer_phone_ph" required aria-label="Número WhatsApp">
+          <button type="submit" class="btn btn-primary" data-i18n="footer_subscribe">Subscrever</button>
+        </form>
+        <p class="footer-legal-note" data-i18n="footer_legal">Ao subscrever, aceita receber novidades e actualizações directamente no seu telemóvel.</p>
+      </div>
+      <div class="footer-social">
+        <a href="https://www.instagram.com/marimaraspaz/" target="_blank" rel="noopener" aria-label="Instagram">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor"/></svg>
+        </a>
+        <a href="https://www.facebook.com/profile.php?id=61579383685594" target="_blank" rel="noopener" aria-label="Facebook">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+        </a>
+        <a href="https://wa.me/244938565536" target="_blank" rel="noopener" aria-label="WhatsApp">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 21l1.65-3.8a9 9 0 1 1 3.4 2.9L3 21"/></svg>
+        </a>
+      </div>
+      <nav class="footer-links">
+        <a href="index.html" data-i18n="nav_home">Início</a>
+        <a href="works.html" data-i18n="nav_works">Trabalhos</a>
+        <a href="products.html" data-i18n="nav_products">Produtos</a>
+        <a href="about.html" data-i18n="nav_about">Sobre</a>
+        <a href="booking.html" data-i18n="nav_book">Agendar</a>
+      </nav>
+      <p class="copyright"><span data-i18n="footer_copy">© 2026 Marimaras Paz · Estética e Beleza</span></p>
+    </div>
+  </footer>
+<script src="main.js"></script>
+</body>
+</html>
