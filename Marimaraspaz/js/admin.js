@@ -26,8 +26,10 @@
   let texts = { pt: {}, en: {} };
   let images = {};
   let media = [];
+  let contact = {};
   let editingId = null;
   let pickSlotKey = null;
+  let textLang = 'pt';
 
   // ——— Auth ———
   function isAuthed() {
@@ -48,6 +50,7 @@
     zones = (window.MP && MP.DELIVERY_ZONES) ? JSON.parse(JSON.stringify(MP.DELIVERY_ZONES)) : [];
     texts = (window.MP && MP.DEFAULT_TEXTS) ? JSON.parse(JSON.stringify(MP.DEFAULT_TEXTS)) : { pt: {}, en: {} };
     images = (window.MP && MP.DEFAULT_SITE_IMAGES) ? Object.assign({}, MP.DEFAULT_SITE_IMAGES) : {};
+    contact = (window.MP && MP.DEFAULT_CONTACT) ? Object.assign({}, MP.DEFAULT_CONTACT) : {};
   }
 
   function loadDrafts() {
@@ -75,6 +78,10 @@
       const m = localStorage.getItem(LS.media);
       if (m) media = JSON.parse(m);
     } catch (e) {}
+    try {
+      const c = localStorage.getItem('mp_contact_override');
+      if (c) Object.assign(contact, JSON.parse(c));
+    } catch (e) {}
   }
 
   function saveDrafts() {
@@ -83,6 +90,7 @@
     localStorage.setItem(LS.texts, JSON.stringify(texts));
     localStorage.setItem(LS.images, JSON.stringify(images));
     localStorage.setItem(LS.media, JSON.stringify(media));
+    localStorage.setItem('mp_contact_override', JSON.stringify(contact));
     toast('Rascunho guardado neste browser');
     updateStats();
   }
@@ -92,7 +100,8 @@
       products: products,
       zones: zones,
       texts: texts,
-      images: images
+      images: images,
+      contact: contact
     };
   }
 
@@ -114,11 +123,36 @@
     el._t = setTimeout(() => el.classList.remove('show'), 2800);
   }
 
+  function closeAdminDrawer() {
+    const nav = $('#adminNav');
+    const overlay = $('#adminDrawerOverlay');
+    if (nav) nav.classList.remove('open');
+    if (overlay) overlay.classList.remove('open');
+    document.body.classList.remove('admin-drawer-open');
+  }
+
+  function openAdminDrawer() {
+    const nav = $('#adminNav');
+    const overlay = $('#adminDrawerOverlay');
+    if (nav) nav.classList.add('open');
+    if (overlay) overlay.classList.add('open');
+    document.body.classList.add('admin-drawer-open');
+  }
+
   function showPanel(id) {
     $$('.panel').forEach(p => p.classList.remove('active'));
-    $$('.admin-nav button').forEach(b => b.classList.toggle('active', b.dataset.panel === id));
+    $$('.admin-nav button[data-panel]').forEach(b => b.classList.toggle('active', b.dataset.panel === id));
     const panel = $('#panel-' + id);
     if (panel) panel.classList.add('active');
+    const labels = {
+      dashboard: 'Painel', products: 'Produtos', zones: 'Zonas',
+      texts: 'Textos', contact: 'Contacto', images: 'Imagens',
+      media: 'Média', guide: 'Guia'
+    };
+    const lab = $('#adminPanelLabel');
+    if (lab) lab.textContent = labels[id] || 'Admin';
+    closeAdminDrawer();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   function formatKz(n) {
@@ -133,6 +167,11 @@
     if (elP) elP.textContent = products.length;
     if (elZ) elZ.textContent = zones.length;
     if (elM) elM.textContent = media.length;
+    const elS = $('#stat-slots');
+    if (elS) {
+      const slots = (window.MP && MP.SITE_IMAGE_SLOTS) || [];
+      elS.textContent = slots.length;
+    }
   }
 
   // ——— Products UI ———
@@ -258,27 +297,84 @@
 
   // ——— Texts ———
   function renderTexts() {
-    $('#text-hero-pt').value = texts.pt.heroTitle || '';
-    $('#text-hero-en').value = texts.en.heroTitle || '';
-    $('#text-sub-pt').value = texts.pt.heroSub || '';
-    $('#text-sub-en').value = texts.en.heroSub || '';
+    const root = $('#text-fields-root');
+    if (!root) return;
+    const fields = (window.MP && MP.TEXT_FIELDS) || [];
+    const lang = textLang;
+    if (!texts[lang]) texts[lang] = {};
+    root.innerHTML = fields.map(group => {
+      const body = group.keys.map(f => {
+        const val = texts[lang][f.key] || '';
+        const input = f.multiline
+          ? `<textarea data-text-key="${f.key}" rows="3">${esc(val)}</textarea>`
+          : `<input type="text" data-text-key="${f.key}" value="${esc(val)}">`;
+        return `<div class="field"><label>${esc(f.label)}</label>${input}</div>`;
+      }).join('');
+      return `<div class="text-group"><h3>${esc(group.group)}</h3>${body}</div>`;
+    }).join('');
   }
 
   function syncTextsFromDOM() {
-    texts.pt.heroTitle = $('#text-hero-pt').value.trim();
-    texts.en.heroTitle = $('#text-hero-en').value.trim();
-    texts.pt.heroSub = $('#text-sub-pt').value.trim();
-    texts.en.heroSub = $('#text-sub-en').value.trim();
+    if (!texts[textLang]) texts[textLang] = {};
+    $$('#text-fields-root [data-text-key]').forEach(el => {
+      texts[textLang][el.getAttribute('data-text-key')] = el.value.trim();
+    });
+  }
+
+  // ——— Contact ———
+  function renderContact() {
+    const map = {
+      'contact-phone-display': 'phone_display',
+      'contact-whatsapp': 'whatsapp',
+      'contact-hours': 'hours',
+      'contact-place': 'place',
+      'contact-email': 'email'
+    };
+    Object.keys(map).forEach(id => {
+      const el = $('#' + id);
+      if (el) el.value = contact[map[id]] || '';
+    });
+  }
+
+  function syncContactFromDOM() {
+    contact.phone_display = ($('#contact-phone-display')?.value || '').trim();
+    contact.whatsapp = ($('#contact-whatsapp')?.value || '').trim();
+    contact.hours = ($('#contact-hours')?.value || '').trim();
+    contact.place = ($('#contact-place')?.value || '').trim();
+    contact.email = ($('#contact-email')?.value || '').trim();
+    // Mirror into texts for site i18n
+    if (contact.hours) {
+      texts.pt = texts.pt || {};
+      texts.pt.info_hours = contact.hours;
+    }
+    if (contact.place) {
+      texts.pt = texts.pt || {};
+      texts.pt.info_place = contact.place;
+    }
+    if (contact.phone_display) {
+      texts.pt = texts.pt || {};
+      texts.en = texts.en || {};
+      if (!texts.pt.announce || texts.pt.announce.indexOf('•') !== -1) {
+        // leave announce alone if staff customized; optional soft update skipped
+      }
+    }
   }
 
   // ——— Site images ———
   function renderSlots() {
     const slots = (window.MP && MP.SITE_IMAGE_SLOTS) || [];
-    const grid = $('#slots-grid');
-    if (!grid) return;
-    grid.innerHTML = slots.map(s => {
-      const url = images[s.key] || '';
-      return `
+    const root = $('#slots-by-group');
+    if (!root) return;
+    const groups = {};
+    slots.forEach(s => {
+      const g = s.group || 'Geral';
+      if (!groups[g]) groups[g] = [];
+      groups[g].push(s);
+    });
+    root.innerHTML = Object.keys(groups).map(g => {
+      const cards = groups[g].map(s => {
+        const url = images[s.key] || '';
+        return `
         <div class="slot-card" data-slot="${s.key}">
           <div class="slot-preview ${url ? '' : 'empty'}" style="${url ? 'background-image:url(' + url + ')' : ''}">${url ? '' : 'Sem imagem'}</div>
           <div class="slot-body">
@@ -292,8 +388,9 @@
               <button type="button" class="btn btn-ghost btn-sm" data-slot-reset="${s.key}">Original</button>
             </div>
           </div>
-        </div>
-      `;
+        </div>`;
+      }).join('');
+      return `<div class="slots-group"><h3>${esc(g)}</h3><div class="slots-grid">${cards}</div></div>`;
     }).join('');
   }
 
@@ -356,6 +453,7 @@
   async function publish() {
     syncZonesFromDOM();
     syncTextsFromDOM();
+    syncContactFromDOM();
     const catalog = buildCatalog();
     const n = products.length;
     const z = zones.length;
@@ -400,20 +498,43 @@
     localStorage.setItem(LS.texts, JSON.stringify(texts));
     localStorage.setItem(LS.images, JSON.stringify(images));
     localStorage.setItem(LS.media, JSON.stringify(media));
+    localStorage.setItem('mp_contact_override', JSON.stringify(contact));
     updateStats();
   }
 
   // ——— Events ———
   function bind() {
+    // Mobile drawer
+    $('#adminMenuBtn')?.addEventListener('click', openAdminDrawer);
+    $('#adminNavClose')?.addEventListener('click', closeAdminDrawer);
+    $('#adminDrawerOverlay')?.addEventListener('click', closeAdminDrawer);
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeAdminDrawer();
+    });
+
     // Nav
-    $$('.admin-nav button').forEach(btn => {
+    $$('.admin-nav button[data-panel]').forEach(btn => {
       btn.addEventListener('click', () => showPanel(btn.dataset.panel));
+    });
+    $$('[data-goto]').forEach(btn => {
+      btn.addEventListener('click', () => showPanel(btn.dataset.goto));
+    });
+
+    // Text language tabs
+    $$('[data-text-lang]').forEach(tab => {
+      tab.addEventListener('click', () => {
+        syncTextsFromDOM();
+        textLang = tab.dataset.textLang;
+        $$('[data-text-lang]').forEach(x => x.classList.toggle('active', x.dataset.textLang === textLang));
+        renderTexts();
+      });
     });
 
     // Save / Publish
     $$('[data-action="save"]').forEach(b => b.addEventListener('click', () => {
       syncZonesFromDOM();
       syncTextsFromDOM();
+      syncContactFromDOM();
       saveDrafts();
     }));
     $$('[data-action="publish"]').forEach(b => b.addEventListener('click', publish));
@@ -534,6 +655,7 @@
     renderProducts();
     renderZones();
     renderTexts();
+    renderContact();
     renderSlots();
     renderMedia();
     updateStats();

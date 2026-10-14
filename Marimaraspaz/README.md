@@ -1,8 +1,8 @@
 # Marimaras Paz — Estética e Beleza
 
-Luxury multi-page website + staff admin for the beauty salon **Marimaras Paz** (Luanda).
+Luxury multi-page website + staff admin for **Marimaras Paz** (Luanda).
 
-Architecture follows `BLUEPRINT.md` (static site + Cloudinary catalog + Cloudflare Worker publish).
+Architecture: `BLUEPRINT.md` — static site, Cloudinary catalog, Cloudflare Worker publish.
 
 ## Pages
 
@@ -16,88 +16,95 @@ Architecture follows `BLUEPRINT.md` (static site + Cloudinary catalog + Cloudfla
 | `about.html` | About |
 | `admin.html` | Staff panel (password-gated) |
 
+## What staff can edit (Admin)
+
+| Area | Details |
+|------|---------|
+| **Produtos** | Name (PT/EN), description, price, category, photo, availability |
+| **Zonas de entrega** | Name + delivery fee (Kz) |
+| **Textos** | Announce bar, hero, store, works, products subtitle, about, CTAs — **PT + EN** |
+| **Contacto & horário** | Phone display, WhatsApp number, hours, location, email |
+| **Imagens do site** | Heroes (home/products/about/booking), logo, store, about photo, work posters |
+| **Biblioteca de média** | Upload to Cloudinary; assign to products or site slots |
+
+Flow: edit → **Guardar rascunho** (same browser preview) → **Publicar** (everyone).
+
 ## Stack
 
-- Pure HTML / CSS / JS
-- Cloudflare Pages (static)
-- Cloudflare Worker (`worker/`) — publish API
-- Cloudinary — media + `marimaraspaz/catalog.json`
+- Pure HTML / CSS / JS (no build step)
+- Cloudflare Pages (static host)
+- Cloudflare Worker — `https://marimaraspaz.beautyaoa.workers.dev/publish`
+- Cloudinary — media + live `marimaraspaz/catalog.json`
 - localStorage cart + admin drafts
-- Orders via WhatsApp `+244 938 565 536`
+- Orders via WhatsApp
 
 ## Folders
 
 ```
-css/styles.css      public styles
-css/admin.css       admin UI
-js/products.js      defaults + Cloudinary config
-js/app.js           cart, i18n, catalog load, product grid
-js/admin.js         admin CRUD + publish
-assets/             static images & videos
+admin.html
+css/styles.css      public site
+css/admin.css       admin UI (mobile drawer + desktop sidebar)
+js/products.js      defaults, slots, text field defs, Cloudinary config
+js/app.js           cart, i18n, live catalog + texts/images/contact
+js/admin.js         staff CRUD + publish
+assets/             default images & videos
 worker/             publish Worker
+BLUEPRINT.md
 ```
 
-## Config (already set for this brand)
+## Config
 
 | Key | Value |
 |-----|--------|
 | Cloud name | `gyssk0cm` |
+| Cloudinary email | beautyaoa@gmail.com |
 | Folder | `marimaraspaz` |
-| Catalog URL | `https://res.cloudinary.com/gyssk0cm/raw/upload/marimaraspaz/catalog.json` |
-| Unsigned preset | `marimaraspaz_media` (**create in Cloudinary dashboard**) |
+| Catalog | `https://res.cloudinary.com/gyssk0cm/raw/upload/marimaraspaz/catalog.json` |
+| Unsigned preset | `marimaraspaz_media` |
+| Worker | `https://marimaraspaz.beautyaoa.workers.dev/` |
+| Publish URL | `…/publish` (set in `js/admin.js`) |
 | Default admin password | `marimaras2026` (**change after handoff**) |
 | WhatsApp | `244938565536` |
 
-## One-time Cloudinary setup
+## Cloudinary (done)
 
-1. Log into Cloudinary cloud `gyssk0cm`.
-2. **Settings → Upload → Upload presets → Add upload preset**
-   - Preset name: `marimaraspaz_media`
-   - Signing mode: **Unsigned**
-   - Folder: `marimaraspaz` (optional)
-   - Unique filename: On
-   - Overwrite: **Off**
-3. Save.
+- Unsigned preset **`marimaraspaz_media`**: overwrite off, unique filename, folder `marimaraspaz`.
 
-## Deploy Worker
+## Worker secrets
 
 ```bash
 cd worker
 npx wrangler deploy
-
-npx wrangler secret put ADMIN_PASSWORD          # use a strong password
+npx wrangler secret put ADMIN_PASSWORD
 npx wrangler secret put CLOUDINARY_CLOUD_NAME   # gyssk0cm
-npx wrangler secret put CLOUDINARY_API_KEY      # 276685239418642
-npx wrangler secret put CLOUDINARY_API_SECRET   # (secret — never commit)
+npx wrangler secret put CLOUDINARY_API_KEY
+npx wrangler secret put CLOUDINARY_API_SECRET
 ```
 
-Then set `PUBLISH_URL` in `js/admin.js` to:
+## Deploy site
 
-`https://marimaraspaz-publish.<your-subdomain>.workers.dev/publish`
+Cloudflare Pages → Framework **None** → output `/`.
 
-## Deploy site (Cloudflare Pages)
+Catalog/text/image changes need **no** redeploy — only HTML/CSS/JS code changes do.
 
-1. Push this folder to GitHub
-2. Cloudflare Pages → Connect → Framework: None → Output: `/`
-3. Deploy
+## Admin UX
 
-No rebuild needed for product/price/image changes after publish — only for HTML/CSS/JS code changes.
+- **Desktop:** sticky sidebar with section groups; wide forms; table for products
+- **Mobile:** hamburger drawer; product cards; sticky Guardar / Publicar; 44px targets; `font-size: 16px` on inputs
+- **Ver site** opens the public homepage in a new tab
 
-## Staff workflow
+## Security
 
-1. Open `/admin.html` → password `marimaras2026` (change it)
-2. Edit products / zones / texts / site images / upload media
-3. Optional **Guardar rascunho** → preview shop in the same browser
-4. **Publicar na loja** → all visitors get the new catalog
+- API secret only in Worker secrets — never in browser code
+- Catalog overwrite requires Worker + admin password
+- Change default admin password after handoff
+- Optional: Cloudflare Access on `/admin.html`
+- Ignore `.DS_Store` and `wrangler-account.json` in `.gitignore`
 
-## Security notes
+## Local path
 
-- API secret lives **only** in Worker secrets — never in browser code.
-- Unsigned preset allows anyone who knows cloud name + preset name to upload images; they cannot read secrets or overwrite catalog.
-- Catalog overwrite requires Worker + correct admin password.
-- Change default admin password after handoff.
-- Optional: put Cloudflare Access in front of `/admin.html`.
+`/Users/inaciom/Documents/GitHub/Marimaraspaz/Marimaraspaz`
 
 ## Legacy
 
-- `main.js` and root `styles.css` are superseded by `js/app.js` and `css/styles.css`. Safe to delete after verifying Pages deploy.
+`main.js` and root `styles.css` are unused (replaced by `js/app.js` and `css/styles.css`). Safe to delete after verify.

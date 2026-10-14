@@ -118,25 +118,109 @@ MP.DEFAULT_SITE_IMAGES = {
   hero_about: 'assets/hero-about.jpg',
   hero_booking: 'assets/hero-booking.jpg',
   logo: 'assets/logo.jpg',
-  store: 'assets/loja.jpeg'
+  store: 'assets/loja.jpeg',
+  about_body: 'assets/hero.jpg',
+  poster_nails: 'assets/poster-nails.jpg',
+  poster_pedi: 'assets/poster-pedi.jpg',
+  poster_hospitality: 'assets/poster-hospitality.jpg'
 };
 
 MP.SITE_IMAGE_SLOTS = [
-  { key: 'hero', label: 'Hero (página inicial)', label_en: 'Hero (homepage)' },
-  { key: 'hero_products', label: 'Hero Produtos', label_en: 'Products hero' },
-  { key: 'hero_about', label: 'Hero Sobre', label_en: 'About hero' },
-  { key: 'hero_booking', label: 'Hero Agendar', label_en: 'Booking hero' },
-  { key: 'logo', label: 'Logo', label_en: 'Logo' },
-  { key: 'store', label: 'Imagem da loja', label_en: 'Store image' }
+  { key: 'hero', label: 'Hero — página inicial', group: 'Páginas' },
+  { key: 'hero_products', label: 'Hero — Produtos', group: 'Páginas' },
+  { key: 'hero_about', label: 'Hero — Sobre', group: 'Páginas' },
+  { key: 'hero_booking', label: 'Hero — Agendar', group: 'Páginas' },
+  { key: 'logo', label: 'Logo', group: 'Marca' },
+  { key: 'store', label: 'Imagem da loja (home)', group: 'Home' },
+  { key: 'about_body', label: 'Foto corpo — Sobre', group: 'Sobre' },
+  { key: 'poster_nails', label: 'Poster unhas', group: 'Trabalhos' },
+  { key: 'poster_pedi', label: 'Poster pedicure', group: 'Trabalhos' },
+  { key: 'poster_hospitality', label: 'Poster hospitalidade', group: 'Trabalhos' }
 ];
 
+/** Staff-editable copy. Keys match data-i18n / applyCatalogTexts. */
 MP.DEFAULT_TEXTS = {
   pt: {
-    heroTitle: 'Realçamos a beleza que há em si',
-    heroSub: 'Tranças, unhas, tratamentos e produtos de qualidade — com cuidado, carinho e dedicação.'
+    announce: 'Agende o seu horário • 938 565 536',
+    hero_eyebrow: 'Salão de Beleza Premium',
+    hero_title: 'Realçamos a beleza que há em si',
+    hero_sub: 'Tranças, unhas, tratamentos e produtos de qualidade — com cuidado, carinho e dedicação.',
+    store_title: 'Marimaras Paz loja',
+    works_eyebrow: 'Os nossos trabalhos',
+    works_title: 'Trabalhos em destaque',
+    works_desc: 'Resultados reais — tranças, unhas e beleza com cuidado.',
+    prod_title: 'Cuide de si com produtos de qualidade',
+    about_title: 'Sobre nós',
+    about_sub: 'Cuidado, carinho e dedicação em cada detalhe',
+    about_eyebrow: 'A nossa história',
+    about_heading: 'Beleza com propósito',
+    about_p1: 'A Marimaras Paz nasceu da paixão por realçar a beleza natural de cada cliente. No nosso espaço, cada trança, cada tratamento e cada detalhe nas unhas é feito com tempo, técnica e respeito pelo que torna cada pessoa única.',
+    about_p2: 'Trabalhamos com produtos seleccionados e um atendimento próximo — para que se sinta em casa desde a primeira visita.',
+    info_hours: 'Seg – Sáb · 09:00 – 18:00',
+    info_place: 'Luanda, Angola',
+    cta_book: 'Agendar horário',
+    cta_shop: 'Compre agora'
   },
   en: {
-    heroTitle: 'We enhance the beauty within you',
-    heroSub: 'Braids, nails, treatments and quality products — with care, warmth and dedication.'
+    announce: 'Book your appointment • 938 565 536',
+    hero_eyebrow: 'Premium Beauty Salon',
+    hero_title: 'We enhance the beauty within you',
+    hero_sub: 'Braids, nails, treatments and quality products — with care, warmth and dedication.',
+    store_title: 'Marimaras Paz store',
+    works_eyebrow: 'Our work',
+    works_title: 'Featured work',
+    works_desc: 'Real results — braids, nails and beauty with care.',
+    prod_title: 'Take care of yourself with quality products',
+    about_title: 'About us',
+    about_sub: 'Care, warmth and dedication in every detail',
+    about_eyebrow: 'Our story',
+    about_heading: 'Beauty with purpose',
+    about_p1: 'Marimaras Paz was born from a passion for enhancing each client\'s natural beauty. In our space, every braid, every treatment and every detail on the nails is done with time, skill and respect for what makes each person unique.',
+    about_p2: 'We work with selected products and close service — so you feel at home from the first visit.',
+    info_hours: 'Mon – Sat · 09:00 – 18:00',
+    info_place: 'Luanda, Angola',
+    cta_book: 'Book appointment',
+    cta_shop: 'Shop now'
   }
 };
+
+MP.DEFAULT_CONTACT = {
+  phone_display: '938 565 536',
+  whatsapp: '244938565536',
+  hours: 'Seg – Sáb · 09:00 – 18:00',
+  place: 'Luanda, Angola',
+  email: ''
+};
+
+/** Field definitions for admin text editor (group + keys). */
+MP.TEXT_FIELDS = [
+  { group: 'Barra / anúncio', keys: [
+    { key: 'announce', label: 'Texto da barra superior', multiline: false }
+  ]},
+  { group: 'Hero (página inicial)', keys: [
+    { key: 'hero_eyebrow', label: 'Eyebrow', multiline: false },
+    { key: 'hero_title', label: 'Título principal', multiline: false },
+    { key: 'hero_sub', label: 'Subtítulo', multiline: true }
+  ]},
+  { group: 'Secções home', keys: [
+    { key: 'store_title', label: 'Título da loja', multiline: false },
+    { key: 'works_eyebrow', label: 'Trabalhos — eyebrow', multiline: false },
+    { key: 'works_title', label: 'Trabalhos — título', multiline: false },
+    { key: 'works_desc', label: 'Trabalhos — descrição', multiline: true }
+  ]},
+  { group: 'Produtos', keys: [
+    { key: 'prod_title', label: 'Subtítulo da página produtos', multiline: false }
+  ]},
+  { group: 'Sobre', keys: [
+    { key: 'about_title', label: 'Título da página', multiline: false },
+    { key: 'about_sub', label: 'Subtítulo da página', multiline: false },
+    { key: 'about_eyebrow', label: 'Eyebrow', multiline: false },
+    { key: 'about_heading', label: 'Título da secção', multiline: false },
+    { key: 'about_p1', label: 'Parágrafo 1', multiline: true },
+    { key: 'about_p2', label: 'Parágrafo 2', multiline: true }
+  ]},
+  { group: 'Botões CTA', keys: [
+    { key: 'cta_book', label: 'Botão agendar', multiline: false },
+    { key: 'cta_shop', label: 'Botão comprar', multiline: false }
+  ]}
+];

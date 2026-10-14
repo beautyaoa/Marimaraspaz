@@ -12,168 +12,201 @@
   <link rel="stylesheet" href="css/admin.css">
 </head>
 <body>
-  <!-- Login -->
   <div class="login-wrap" id="login-screen">
     <form class="login-card" id="login-form">
       <h1>Marimaras Paz</h1>
-      <p>Painel de staff — produtos, imagens e publicação</p>
+      <p>Painel de staff — produtos, textos, imagens e publicação</p>
       <label for="login-password">Password</label>
       <input type="password" id="login-password" autocomplete="current-password" required>
       <p class="login-error" id="login-error"></p>
-      <label style="display:flex;align-items:center;gap:8px;margin-bottom:16px;font-size:.85rem;color:var(--muted)">
-        <input type="checkbox" id="login-remember" style="width:auto;margin:0"> Lembrar neste dispositivo
+      <label class="check-row">
+        <input type="checkbox" id="login-remember"> Lembrar neste dispositivo
       </label>
       <button type="submit" class="btn btn-primary">Entrar</button>
     </form>
   </div>
 
-  <!-- Shell -->
   <div class="admin-shell" id="admin-shell">
     <header class="admin-top">
+      <button type="button" class="admin-menu-btn" id="adminMenuBtn" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
       <div class="admin-brand">
         Marimaras Paz
-        <span>Admin</span>
+        <span id="adminPanelLabel">Admin</span>
       </div>
       <div class="admin-top-actions">
+        <a href="index.html" class="btn btn-ghost btn-sm" target="_blank" rel="noopener">Ver site</a>
         <button type="button" class="btn btn-ghost btn-sm desktop-only" data-action="save">Guardar rascunho</button>
-        <button type="button" class="btn btn-primary btn-sm desktop-only" data-action="publish">Publicar na loja</button>
-        <button type="button" class="btn btn-ghost btn-sm" data-action="logout">Sair</button>
+        <button type="button" class="btn btn-primary btn-sm desktop-only" data-action="publish">Publicar</button>
+        <button type="button" class="btn btn-ghost btn-sm" data-action="logout" title="Sair">Sair</button>
       </div>
     </header>
 
+    <div class="admin-drawer-overlay" id="adminDrawerOverlay"></div>
+
     <div class="admin-layout">
-      <nav class="admin-nav">
+      <nav class="admin-nav" id="adminNav">
+        <div class="admin-nav-head">
+          <span>Menu</span>
+          <button type="button" class="admin-nav-close" id="adminNavClose" aria-label="Fechar">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+          </button>
+        </div>
+        <p class="nav-section-label">Geral</p>
         <button type="button" data-panel="dashboard" class="active">Painel</button>
+        <button type="button" data-panel="guide">Guia do staff</button>
+        <p class="nav-section-label">Loja</p>
         <button type="button" data-panel="products">Produtos</button>
         <button type="button" data-panel="zones">Zonas de entrega</button>
+        <p class="nav-section-label">Conteúdo do site</p>
         <button type="button" data-panel="texts">Textos</button>
+        <button type="button" data-panel="contact">Contacto & horário</button>
         <button type="button" data-panel="images">Imagens do site</button>
         <button type="button" data-panel="media">Biblioteca de média</button>
-        <button type="button" data-panel="guide">Guia do staff</button>
       </nav>
 
       <main class="admin-main">
-        <!-- Dashboard -->
         <section class="panel active" id="panel-dashboard">
           <h2>Painel</h2>
-          <p class="lead">Rascunhos ficam só neste browser. «Publicar» actualiza a loja para todos.</p>
+          <p class="lead">Rascunhos ficam só neste browser. «Publicar» actualiza a loja para todos os visitantes.</p>
           <div class="stats-grid">
             <div class="stat-card"><div class="num" id="stat-products">0</div><div class="lbl">Produtos</div></div>
             <div class="stat-card"><div class="num" id="stat-zones">0</div><div class="lbl">Zonas</div></div>
             <div class="stat-card"><div class="num" id="stat-media">0</div><div class="lbl">Média</div></div>
+            <div class="stat-card"><div class="num" id="stat-slots">0</div><div class="lbl">Slots imagem</div></div>
           </div>
-          <div class="guide">
-            <h3>Fluxo rápido</h3>
-            <ol>
-              <li>Edite produtos, zonas, textos ou imagens.</li>
-              <li>Opcional: <strong>Guardar rascunho</strong> e abrir a loja no mesmo browser para pré-visualizar.</li>
-              <li><strong>Publicar na loja</strong> — todos os clientes vêem as alterações no próximo carregamento.</li>
-            </ol>
+          <div class="card-grid">
+            <div class="info-card">
+              <h3>Fluxo rápido</h3>
+              <ol>
+                <li>Edite produtos, textos, contacto ou imagens.</li>
+                <li>Opcional: <strong>Guardar rascunho</strong> e abrir o site no mesmo browser.</li>
+                <li><strong>Publicar</strong> — todos vêem as alterações no próximo carregamento.</li>
+              </ol>
+            </div>
+            <div class="info-card">
+              <h3>Atalhos</h3>
+              <div class="quick-links">
+                <button type="button" class="btn btn-ghost btn-sm" data-goto="products">Produtos</button>
+                <button type="button" class="btn btn-ghost btn-sm" data-goto="texts">Textos</button>
+                <button type="button" class="btn btn-ghost btn-sm" data-goto="images">Imagens</button>
+                <button type="button" class="btn btn-ghost btn-sm" data-goto="contact">Contacto</button>
+                <button type="button" class="btn btn-primary btn-sm" data-action="publish">Publicar na loja</button>
+              </div>
+            </div>
           </div>
         </section>
 
-        <!-- Products -->
         <section class="panel" id="panel-products">
-          <h2>Produtos</h2>
-          <p class="lead">Preços em Kwanzas. Alterações só na loja depois de publicar.</p>
-          <div class="toolbar">
+          <div class="panel-head">
+            <div>
+              <h2>Produtos</h2>
+              <p class="lead">Preços em Kwanzas. Só aparecem na loja depois de publicar.</p>
+            </div>
             <button type="button" class="btn btn-primary btn-sm" id="btn-add-product">+ Novo produto</button>
           </div>
           <table class="product-table">
             <thead>
-              <tr>
-                <th></th><th>Nome</th><th>Categoria</th><th>Preço</th><th>Disponível</th><th></th>
-              </tr>
+              <tr><th></th><th>Nome</th><th>Categoria</th><th>Preço</th><th>Disp.</th><th></th></tr>
             </thead>
             <tbody id="product-tbody"></tbody>
           </table>
           <div class="product-cards" id="product-cards"></div>
         </section>
 
-        <!-- Zones -->
         <section class="panel" id="panel-zones">
-          <h2>Zonas de entrega</h2>
-          <p class="lead">Taxas de entrega por zona (Kz).</p>
-          <div class="toolbar">
+          <div class="panel-head">
+            <div>
+              <h2>Zonas de entrega</h2>
+              <p class="lead">Taxas de entrega por zona (Kz).</p>
+            </div>
             <button type="button" class="btn btn-primary btn-sm" id="btn-add-zone">+ Zona</button>
           </div>
           <div class="zone-list" id="zone-list"></div>
         </section>
 
-        <!-- Texts -->
         <section class="panel" id="panel-texts">
           <h2>Textos do site</h2>
-          <p class="lead">Títulos principais (PT / EN). O resto da i18n continua no código.</p>
-          <div class="field">
-            <label>Hero título (PT)</label>
-            <input type="text" id="text-hero-pt">
+          <p class="lead">Conteúdo visível nas páginas. Preencha PT e EN. Guarde rascunho ou publique.</p>
+          <div class="lang-tabs" id="text-lang-tabs">
+            <button type="button" class="lang-tab active" data-text-lang="pt">Português</button>
+            <button type="button" class="lang-tab" data-text-lang="en">English</button>
           </div>
-          <div class="field">
-            <label>Hero título (EN)</label>
-            <input type="text" id="text-hero-en">
-          </div>
-          <div class="field">
-            <label>Hero subtítulo (PT)</label>
-            <textarea id="text-sub-pt"></textarea>
-          </div>
-          <div class="field">
-            <label>Hero subtítulo (EN)</label>
-            <textarea id="text-sub-en"></textarea>
+          <div id="text-fields-root"></div>
+        </section>
+
+        <section class="panel" id="panel-contact">
+          <h2>Contacto & horário</h2>
+          <p class="lead">Dados mostrados no site e usados em mensagens WhatsApp.</p>
+          <div class="form-card">
+            <div class="field-row">
+              <div class="field">
+                <label>Telefone (como aparece)</label>
+                <input type="text" id="contact-phone-display" placeholder="938 565 536" inputmode="tel">
+              </div>
+              <div class="field">
+                <label>WhatsApp (só números, com 244)</label>
+                <input type="text" id="contact-whatsapp" placeholder="244938565536" inputmode="tel">
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label>Horário</label>
+                <input type="text" id="contact-hours" placeholder="Seg – Sáb · 09:00 – 18:00">
+              </div>
+              <div class="field">
+                <label>Localização</label>
+                <input type="text" id="contact-place" placeholder="Luanda, Angola">
+              </div>
+            </div>
+            <div class="field">
+              <label>Email (opcional)</label>
+              <input type="email" id="contact-email" placeholder="contato@…">
+            </div>
           </div>
         </section>
 
-        <!-- Site images -->
         <section class="panel" id="panel-images">
           <h2>Imagens do site</h2>
-          <p class="lead">Hero, logo, loja… Carregar ou escolher da biblioteca. Sem colar URLs.</p>
-          <div class="slots-grid" id="slots-grid"></div>
+          <p class="lead">Heroes, logo, loja… Carregar ou escolher da biblioteca. Sem colar URLs.</p>
+          <div id="slots-by-group"></div>
         </section>
 
-        <!-- Media -->
         <section class="panel" id="panel-media">
-          <h2>Biblioteca de média</h2>
-          <p class="lead">Upload para Cloudinary (preset unsigned). Apagar aqui só remove da lista deste browser.</p>
-          <div class="toolbar">
+          <div class="panel-head">
+            <div>
+              <h2>Biblioteca de média</h2>
+              <p class="lead">Upload para Cloudinary. Apagar aqui só remove da lista deste browser.</p>
+            </div>
             <label class="btn btn-primary btn-sm">
-              + Carregar imagens
+              + Carregar
               <input type="file" id="media-upload" accept="image/*" multiple class="hidden">
             </label>
           </div>
           <div class="media-grid" id="media-grid"></div>
         </section>
 
-        <!-- Guide -->
         <section class="panel" id="panel-guide">
           <h2>Guia do staff</h2>
           <div class="guide">
             <h3>Rascunho vs Publicar</h3>
             <ul>
-              <li><strong>Guardar rascunho</strong> — só este telemóvel/browser. Útil para testar a loja no mesmo aparelho.</li>
-              <li><strong>Publicar na loja</strong> — envia o catálogo para a cloud; todos os clientes vêem no próximo refresh.</li>
+              <li><strong>Guardar rascunho</strong> — só este telemóvel/browser.</li>
+              <li><strong>Publicar</strong> — todos os clientes vêem no próximo refresh.</li>
             </ul>
-            <h3>Produtos</h3>
+            <h3>O que pode editar</h3>
             <ul>
-              <li>Use «Novo produto» ou Editar. Pode carregar foto directamente no formulário.</li>
-              <li>Categoria: skincare, body, deo, hair (filtros da loja).</li>
-              <li>Marque «Consulte» se o preço não for fixo.</li>
-            </ul>
-            <h3>Imagens do site</h3>
-            <ul>
-              <li>Cada cartão é um sítio da página (hero, logo…).</li>
-              <li><strong>Carregar</strong> envia para a cloud e associa ao slot.</li>
-              <li><strong>Média</strong> abre a biblioteca — toque numa imagem para atribuir.</li>
-              <li><strong>Original</strong> volta à imagem por defeito do site.</li>
+              <li><strong>Produtos</strong> — nome, preço, foto, categoria, disponibilidade.</li>
+              <li><strong>Zonas</strong> — taxas de entrega.</li>
+              <li><strong>Textos</strong> — anúncio, hero, sobre, trabalhos, CTAs (PT e EN).</li>
+              <li><strong>Contacto</strong> — telefone, WhatsApp, horário, localização.</li>
+              <li><strong>Imagens</strong> — heroes, logo, loja, posters.</li>
             </ul>
             <h3>Telemóvel</h3>
             <ul>
-              <li>Botões Guardar / Publicar ficam fixos em baixo.</li>
-              <li>Se algo falhar no upload: confirme que o preset <code>marimaraspaz_media</code> existe no Cloudinary (unsigned).</li>
-              <li>Se publicar falhar: o Worker pode não estar deployado — contacte o programador.</li>
-            </ul>
-            <h3>Segurança</h3>
-            <ul>
-              <li>Altere a password de admin após a entrega.</li>
-              <li>Não partilhe a password do painel em grupos públicos.</li>
+              <li>Menu ☰ no canto superior esquerdo.</li>
+              <li>Botões Guardar / Publicar fixos em baixo.</li>
             </ul>
           </div>
         </section>
@@ -181,12 +214,11 @@
     </div>
 
     <div class="sticky-actions">
-      <button type="button" class="btn btn-ghost" data-action="save">Guardar rascunho</button>
-      <button type="button" class="btn btn-primary" data-action="publish">Publicar na loja</button>
+      <button type="button" class="btn btn-ghost" data-action="save">Guardar</button>
+      <button type="button" class="btn btn-primary" data-action="publish">Publicar</button>
     </div>
   </div>
 
-  <!-- Product modal -->
   <div class="modal-overlay" id="product-modal">
     <div class="modal">
       <h3 id="prod-modal-title">Produto</h3>
@@ -195,28 +227,13 @@
         <input type="text" id="prod-id" placeholder="ex: facial-clean">
       </div>
       <div class="field-row">
-        <div class="field">
-          <label>Nome (PT)</label>
-          <input type="text" id="prod-name">
-        </div>
-        <div class="field">
-          <label>Nome (EN)</label>
-          <input type="text" id="prod-name-en">
-        </div>
+        <div class="field"><label>Nome (PT)</label><input type="text" id="prod-name"></div>
+        <div class="field"><label>Nome (EN)</label><input type="text" id="prod-name-en"></div>
       </div>
-      <div class="field">
-        <label>Descrição (PT)</label>
-        <textarea id="prod-desc"></textarea>
-      </div>
-      <div class="field">
-        <label>Descrição (EN)</label>
-        <textarea id="prod-desc-en"></textarea>
-      </div>
+      <div class="field"><label>Descrição (PT)</label><textarea id="prod-desc"></textarea></div>
+      <div class="field"><label>Descrição (EN)</label><textarea id="prod-desc-en"></textarea></div>
       <div class="field-row">
-        <div class="field">
-          <label>Preço (Kz)</label>
-          <input type="number" id="prod-price" inputmode="decimal" min="0" step="1">
-        </div>
+        <div class="field"><label>Preço (Kz)</label><input type="number" id="prod-price" inputmode="decimal" min="0" step="1"></div>
         <div class="field">
           <label>Categoria</label>
           <select id="prod-category">
@@ -227,10 +244,7 @@
           </select>
         </div>
       </div>
-      <div class="field">
-        <label>URL da imagem</label>
-        <input type="text" id="prod-image" placeholder="https://… ou assets/…">
-      </div>
+      <div class="field"><label>URL da imagem</label><input type="text" id="prod-image" placeholder="https://… ou assets/…"></div>
       <div class="field">
         <label class="btn btn-ghost btn-sm" style="display:inline-flex">
           Carregar foto
@@ -239,12 +253,8 @@
         <img id="prod-preview" alt="" style="margin-top:10px;max-height:120px;border-radius:8px;display:none">
       </div>
       <div class="field-row">
-        <label style="display:flex;align-items:center;gap:8px;font-size:.9rem">
-          <input type="checkbox" id="prod-available" checked> Disponível
-        </label>
-        <label style="display:flex;align-items:center;gap:8px;font-size:.9rem">
-          <input type="checkbox" id="prod-consult"> Preço «Consulte»
-        </label>
+        <label class="check-row"><input type="checkbox" id="prod-available" checked> Disponível</label>
+        <label class="check-row"><input type="checkbox" id="prod-consult"> Preço «Consulte»</label>
       </div>
       <div class="modal-actions">
         <button type="button" class="btn btn-primary" id="prod-save">Guardar</button>

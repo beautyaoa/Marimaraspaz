@@ -17,6 +17,7 @@
   let liveZones = (window.MP && MP.DELIVERY_ZONES) ? MP.DELIVERY_ZONES.slice() : [];
   let liveTexts = (window.MP && MP.DEFAULT_TEXTS) ? JSON.parse(JSON.stringify(MP.DEFAULT_TEXTS)) : { pt: {}, en: {} };
   let liveImages = (window.MP && MP.DEFAULT_SITE_IMAGES) ? Object.assign({}, MP.DEFAULT_SITE_IMAGES) : {};
+  let liveContact = (window.MP && MP.DEFAULT_CONTACT) ? Object.assign({}, MP.DEFAULT_CONTACT) : {};
 
   function loadOverrides() {
     try {
@@ -38,6 +39,10 @@
       const i = localStorage.getItem(LS.images);
       if (i) Object.assign(liveImages, JSON.parse(i));
     } catch (e) {}
+    try {
+      const c = localStorage.getItem('mp_contact_override');
+      if (c) Object.assign(liveContact, JSON.parse(c));
+    } catch (e) {}
   }
 
   async function fetchRemoteCatalog() {
@@ -56,8 +61,39 @@
         };
       }
       if (data.images) Object.assign(liveImages, data.images);
+      if (data.contact) Object.assign(liveContact, data.contact);
     } catch (e) {
       console.warn('Catalog remote unavailable, using defaults', e);
+    }
+  }
+
+  function applyCatalogTexts() {
+    if (!liveTexts) return;
+    // Merge into I18N when it exists (defined later in this IIFE — called after)
+    if (typeof I18N === 'undefined') return;
+    ['pt', 'en'].forEach(lang => {
+      if (!liveTexts[lang]) return;
+      Object.keys(liveTexts[lang]).forEach(k => {
+        if (liveTexts[lang][k] != null && liveTexts[lang][k] !== '') {
+          I18N[lang][k] = liveTexts[lang][k];
+        }
+      });
+      // Map legacy keys from early admin
+      if (liveTexts[lang].heroTitle) I18N[lang].hero_title = liveTexts[lang].heroTitle;
+      if (liveTexts[lang].heroSub) I18N[lang].hero_sub = liveTexts[lang].heroSub;
+    });
+    // Contact → i18n hours/place + announce if phone display set
+    if (liveContact.hours) {
+      I18N.pt.info_hours = liveContact.hours;
+      // keep EN separate if texts has it
+    }
+    if (liveContact.place) {
+      I18N.pt.info_place = liveContact.place;
+    }
+    if (liveContact.phone_display) {
+      document.querySelectorAll('[data-phone-display]').forEach(el => {
+        el.textContent = liveContact.phone_display;
+      });
     }
   }
 
@@ -184,12 +220,16 @@
 
   window.MPApp = {
     getProducts, getZones, getSiteImages, getCart, formatKz, renderProductsGrid, applySiteImages,
+    getContact: function () { return liveContact; },
+    getTexts: function () { return liveTexts; },
     reloadCatalog: async function () {
       loadOverrides();
       await fetchRemoteCatalog();
       loadOverrides();
       renderProductsGrid();
       applySiteImages();
+      applyCatalogTexts();
+      if (typeof applyI18n === 'function') applyI18n(typeof currentLang !== 'undefined' ? currentLang : 'pt');
     }
   };
 
@@ -1167,5 +1207,7 @@
     loadOverrides(); // same-browser admin drafts win
     renderProductsGrid();
     applySiteImages();
+    applyCatalogTexts();
+    if (typeof applyI18n === 'function') applyI18n(currentLang || 'pt');
   })();
 })();
