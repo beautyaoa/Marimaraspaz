@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Conheça a Marimaras Paz — estética e beleza com cuidado, carinho e dedicação em Angola.">
+  <meta property="og:title" content="Sobre | Marimaras Paz">
+  <meta property="og:description" content="A história e o cuidado por detrás do salão Marimaras Paz.">
+  <meta property="og:image" content="assets/hero-about.jpg">
+  <meta property="og:type" content="website">
+  <link rel="preload" as="image" href="assets/hero-about.jpg">
+  <title>Sobre | Marimaras Paz</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="icon" href="assets/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="stylesheet" href="styles.css?v=about-hero-1">
+</head>
+<body class="page-transparent-header">
+  <div class="announce-bar" id="announceBar">
+    <a href="booking.html" class="announce-link" data-i18n="announce">Agende o seu horário • 938 565 536</a>
+  </div>
+
+  <header class="site-header" id="siteHeader">
+    <div class="header-inner">
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span class="ham-line"></span><span class="ham-line"></span><span class="ham-line"></span>
+      </button>
+      <a href="index.html" class="brand">
+        <span class="brand-primary">MARIMARAS PAZ</span>
+        <span class="brand-secondary">ESTÉTICA E BELEZA</span>
+      </a>
+      <nav class="desktop-nav">
+        <a href="index.html" data-i18n="nav_home">Início</a>
+        <a href="works.html" data-i18n="nav_works">Trabalhos</a>
+        <a href="index.html#servicos" data-i18n="nav_services">Serviços</a>
+        <a href="products.html" data-i18n="nav_products">Produtos</a>
+        <a href="about.html" class="active" data-i18n="nav_about">Sobre</a>
+        <a href="booking.html" data-i18n="nav_book">Agendar</a>
+        <a href="index.html#contacto" data-i18n="nav_contact">Contacto</a>
+      </nav>
+      <div class="header-actions">
+        <button class="lang-toggle" id="langToggle">EN</button>
+        <button class="cart-btn" id="cartBtn" aria-label="Carrinho">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 6h15l-1.5 9h-12z"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/><path d="M6 6L5 3H2"/></svg>
+          <span class="cart-count" data-count="0"></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="drawer-overlay" id="drawerOverlay"></div>
+  <aside class="drawer" id="drawer">
+    <div class="drawer-header">
+      <div class="drawer-brand">
+        <span class="brand-primary">MARIMARAS PAZ</span>
+        <span class="brand-secondary">ESTÉTICA E BELEZA</span>
+      </div>
+      <button class="drawer-close" id="drawerClose" aria-label="Fechar">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <nav class="drawer-nav">
+      <a href="index.html" data-i18n="nav_home">Início</a>
+      <a href="works.html" data-i18n="nav_works">Trabalhos</a>
+      <a href="index.html#servicos" data-i18n="nav_services">Serviços</a>
+      <a href="products.html" data-i18n="nav_products">Produtos</a>
+      <a href="about.html" class="active" data-i18n="nav_about">Sobre</a>
+      <a href="booking.html" data-i18n="nav_book">Agendar</a>
+      <a href="index.html#contacto" data-i18n="nav_contact">Contacto</a>
+    </nav>
+    <div class="drawer-footer">
+      <a href="booking.html" class="btn btn-primary" data-i18n="cta_book">Agendar horário</a>
+    </div>
+  </aside>
+
+  <div class="cart-overlay" id="cartOverlay"></div>
+  <aside class="cart-panel" id="cartPanel">
+    <div class="cart-header">
+      <h2 data-i18n="cart_title">Carrinho</h2>
+      <button class="cart-close" id="cartClose" aria-label="Fechar">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="cart-items" id="cartItems"><p class="cart-empty" data-i18n="cart_empty">O seu carrinho está vazio</p></div>
+    <div class="cart-footer">
+      <div class="cart-total"><span data-i18n="cart_total">Total</span><span id="cartTotal">0 Kz</span></div>
+      <a href="checkout.html" class="btn btn-primary" data-i18n="cart_checkout">Finalizar compra</a>
+      <button type="button" class="btn btn-ghost" id="clearCartBtn" data-i18n="cart_clear">Limpar carrinho</button>
+      <button type="button" class="btn btn-ghost cart-continue" data-close-cart data-i18n="cart_continue">Continuar a comprar</button>
+    </div>
+  </aside>
+
+  <main>
+    <div class="page-hero page-hero-img">
+      <div class="page-hero-media">
+        <img src="assets/hero-about.jpg" alt="Marimaras Paz — tranças e cuidado" width="1600" height="900" fetchpriority="high">
+        <div class="page-hero-overlay"></div>
+      </div>
+      <div class="page-hero-content">
+        <h1 data-i18n="about_title">Sobre nós</h1>
+        <p data-i18n="about_sub">Cuidado, carinho e dedicação em cada detalhe</p>
+      </div>
+    </div>
+
+    <section class="about-teaser" style="padding-top:2rem;">
+      <div class="container about-teaser-grid">
+        <div class="about-teaser-img">
+          <img src="assets/hero.jpg" alt="Marimaras Paz" width="800" height="1000" loading="eager">
+        </div>
+        <div class="about-teaser-text">
+          <p class="section-eyebrow" data-i18n="about_eyebrow">A nossa história</p>
+          <h2 class="section-title" data-i18n="about_heading">Beleza com propósito</h2>
+          <p data-i18n="about_p1">A Marimaras Paz nasceu da paixão por realçar a beleza natural de cada cliente. No nosso espaço, cada trança, cada tratamento e cada detalhe nas unhas é feito com tempo, técnica e respeito pelo que torna cada pessoa única.</p>
+          <p data-i18n="about_p2">Trabalhamos com produtos seleccionados e um atendimento próximo — para que se sinta em casa desde a primeira visita.</p>
+          <a href="booking.html" class="btn btn-primary" data-i18n="cta_book">Agendar horário</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="trust-section">
+      <div class="container">
+        <div class="info-strip">
+          <div class="info-pill">
+            <strong data-i18n="info_hours_label">Horário</strong>
+            <span data-i18n="info_hours">Seg – Sáb · 09:00 – 18:00</span>
+          </div>
+          <div class="info-pill">
+            <strong data-i18n="info_place_label">Localização</strong>
+            <span data-i18n="info_place">Luanda, Angola</span>
+          </div>
+          <div class="info-pill">
+            <strong data-i18n="info_phone_label">Contacto</strong>
+            <span>WhatsApp 938 565 536</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-signup">
+        <span class="footer-label" data-i18n="footer_signup">Receba novidades e promoções</span>
+        <form class="newsletter-form" id="whatsappSubscribe" action="#" method="post">
+          <input type="tel" name="whatsapp" inputmode="tel" autocomplete="tel"
+            placeholder="O seu número WhatsApp" data-i18n-placeholder="footer_phone_ph" required aria-label="Número WhatsApp" data-i18n-placeholder="footer_phone_ph">
+          <button type="submit" class="btn btn-primary" data-i18n="footer_subscribe">Subscrever</button>
+        </form>
+        <p class="footer-legal-note" data-i18n="footer_legal">Ao subscrever, aceita receber novidades e actualizações directamente no seu telemóvel.</p>
+    </div>
+  </footer>
+<script src="main.js?v=about-hero-1"></script>
+</body>
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout | Marimaras Paz</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="icon" href="assets/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="announce-bar" id="announceBar">
+    <a href="booking.html" class="announce-link" data-i18n="announce">Agende o seu horário • 938 565 536</a>
+  </div>
+
+  <header class="site-header" id="siteHeader">
+    <div class="header-inner">
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span class="ham-line"></span>
+        <span class="ham-line"></span>
+        <span class="ham-line"></span>
+      </button>
+      <a href="index.html" class="brand">
+        <span class="brand-primary">MARIMARAS PAZ</span>
+        <span class="brand-secondary">ESTÉTICA E BELEZA</span>
+      </a>
+      <nav class="desktop-nav">
+        <a href="index.html" data-i18n="nav_home">Início</a>
+        <a href="works.html" data-i18n="nav_works">Trabalhos</a>
+        <a href="index.html#servicos" data-i18n="nav_services">Serviços</a>
+        <a href="products.html" data-i18n="nav_products">Produtos</a>
+        <a href="about.html" data-i18n="nav_about">Sobre</a>
+        <a href="booking.html" data-i18n="nav_book">Agendar</a>
+        <a href="index.html#contacto" data-i18n="nav_contact">Contacto</a>
+      </nav>
+      <div class="header-actions">
+        <button class="lang-toggle" id="langToggle">EN</button>
+        <button class="cart-btn" id="cartBtn" aria-label="Carrinho">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 6h15l-1.5 9h-12z"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/><path d="M6 6L5 3H2"/></svg>
+          <span class="cart-count" data-count="0"></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="drawer-overlay" id="drawerOverlay"></div>
+  <aside class="drawer" id="drawer">
+    <div class="drawer-header">
+      <div class="drawer-brand">
+        <span class="brand-primary">MARIMARAS PAZ</span>
+        <span class="brand-secondary">ESTÉTICA E BELEZA</span>
+      </div>
+      <button class="drawer-close" id="drawerClose" aria-label="Fechar">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <nav class="drawer-nav">
+      <a href="index.html" data-i18n="nav_home">Início</a>
+        <a href="works.html" data-i18n="nav_works">Trabalhos</a>
+      <a href="products.html" data-i18n="nav_products">Produtos</a>
+      <a href="about.html" data-i18n="nav_about">Sobre</a>
+        <a href="booking.html" data-i18n="nav_book">Agendar</a>
+      <a href="index.html#contacto" data-i18n="nav_contact">Contacto</a>
+    </nav>
+  </aside>
+
+  <div class="cart-overlay" id="cartOverlay"></div>
+  <aside class="cart-panel" id="cartPanel">
+    <div class="cart-header">
+      <h2 data-i18n="cart_title">Carrinho</h2>
+      <button class="cart-close" id="cartClose" aria-label="Fechar">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="cart-items" id="cartItems"><p class="cart-empty" data-i18n="cart_empty">O seu carrinho está vazio</p></div>
+        <div class="cart-footer">
+      <div class="cart-total">
+        <span data-i18n="cart_total">Total</span>
+        <span id="cartTotal">0 Kz</span>
+      </div>
+      <a href="checkout.html" class="btn btn-primary" data-i18n="cart_checkout">Finalizar compra</a>
+      <button type="button" class="btn btn-ghost" id="clearCartBtn" data-i18n="cart_clear">Limpar carrinho</button>
+      <button type="button" class="btn btn-ghost cart-continue" data-close-cart data-i18n="cart_continue">Continuar a comprar</button>
+    </div>
+  </aside>
+
+  <main>
+    <div class="page-hero">
+      <h1 data-i18n="checkout_title">Checkout</h1>
+      <p><span data-i18n="checkout_sub">Finalize o seu pedido</span></p>
+    </div>
+
+    <div class="container checkout-layout">
+      <div class="checkout-summary" id="checkoutSummary"></div>
+
+      <form class="checkout-form" id="checkoutForm">
+        <div class="form-group">
+          <label for="name"><span data-i18n="checkout_name">Nome completo</span> <span class="req">*</span></label>
+          <input type="text" id="name" name="name" required placeholder="O seu nome">
+        </div>
+
+        <div class="form-group">
+          <label for="phone"><span data-i18n="checkout_phone">Telefone / WhatsApp</span> <span class="req">*</span></label>
+          <input type="tel" id="phone" name="phone" required placeholder="9XX XXX XXX">
+        </div>
+
+        <div class="form-group">
+          <label for="location"><span data-i18n="checkout_loc">Localização</span> <span class="req">*</span></label>
+          <input type="text" id="location" name="location" required placeholder="Cidade / Zona">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="municipio"><span data-i18n="checkout_mun">Município</span> <span class="req">*</span></label>
+            <input type="text" id="municipio" name="municipio" required placeholder="Município">
+          </div>
+          <div class="form-group">
+            <label for="bairro"><span data-i18n="checkout_bairro">Bairro</span> <span class="req">*</span></label>
+            <input type="text" id="bairro" name="bairro" required placeholder="Bairro">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="email"><span data-i18n="checkout_email">Email</span> <span style="color:var(--muted);font-weight:300" data-i18n="book_optional">(opcional)</span></label>
+          <input type="email" id="email" name="email" placeholder="email@exemplo.com">
+        </div>
+
+        <div class="form-group">
+          <label for="message"><span data-i18n="checkout_msg">Mensagem</span> <span style="color:var(--muted);font-weight:300" data-i18n="book_optional">(opcional)</span></label>
+          <textarea id="message" name="message" placeholder="Notas sobre a entrega ou pedido..."></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width:100%;margin-top:0.5rem;"><span data-i18n="checkout_submit">Enviar pedido via WhatsApp</span></button>
+      </form>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-signup">
+        <span class="footer-label" data-i18n="footer_signup">Receba novidades e promoções</span>
+        <form class="newsletter-form" id="whatsappSubscribe" action="#" method="post">
+          <input type="tel" name="whatsapp" inputmode="tel" autocomplete="tel"
+            placeholder="O seu número WhatsApp" data-i18n-placeholder="footer_phone_ph" required aria-label="Número WhatsApp">
+          <button type="submit" class="btn btn-primary" data-i18n="footer_subscribe">Subscrever</button>
+        </form>
+        <p class="footer-legal-note" data-i18n="footer_legal">Ao subscrever, aceita receber novidades e actualizações directamente no seu telemóvel.</p>
+      </div>
+      <nav class="footer-links">
+        <a href="index.html" data-i18n="nav_home">Início</a>
+        <a href="works.html" data-i18n="nav_works">Trabalhos</a>
+        <a href="products.html" data-i18n="nav_products">Produtos</a>
+        <a href="about.html" data-i18n="nav_about">Sobre</a>
+        <a href="booking.html" data-i18n="nav_book">Agendar</a>
+      </nav>
+      <p class="copyright"><span data-i18n="footer_copy">© 2026 Marimaras Paz · Estética e Beleza</span></p>
+    </div>
+  </footer>
+<script src="main.js"></script>
+</body>
+</html>
