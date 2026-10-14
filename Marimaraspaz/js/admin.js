@@ -6,7 +6,7 @@
   'use strict';
 
   // ——— Config (edit after Worker deploy) ———
-  const PUBLISH_URL = ''; // e.g. 'https://marimaraspaz-publish.YOUR_SUBDOMAIN.workers.dev/publish'
+  const PUBLISH_URL = 'https://marimaraspaz.beautyaoa.workers.dev/publish';
   const DEFAULT_ADMIN_PASSWORD = 'marimaras2026'; // change after handoff
   const LS = {
     auth: 'mp_admin_auth',
