@@ -17,7 +17,7 @@
   <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png">
   <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
   <link rel="manifest" href="site.webmanifest">
-  <link rel="stylesheet" href="styles.css?v=hdr-trans-1">
+  <link rel="stylesheet" href="css/styles.css?v=hdr-trans-1">
 </head>
 <body class="page-transparent-header">
   <div class="announce-bar" id="announceBar">
@@ -102,7 +102,7 @@
   <main>
     <div class="page-hero page-hero-img">
       <div class="page-hero-media">
-        <img src="assets/hero-products.jpg" alt="Produtos Marimaras Paz" width="1600" height="900" fetchpriority="high">
+        <img src="assets/hero-products.jpg" data-site-img="hero_products" alt="Produtos Marimaras Paz" width="1600" height="900" fetchpriority="high">
         <div class="page-hero-overlay"></div>
       </div>
       <div class="page-hero-content">
@@ -121,101 +121,7 @@
       </div>
 
       <div class="products-page-grid">
-        <article class="prod-card" data-category="skincare">
-          <div class="prod-card-img"><img src="assets/facial-clean.jpg" alt="Facial Clean Argila Branca" loading="lazy"></div>
-          <div class="prod-card-body">
-            <span class="prod-card-cat">Skincare</span>
-            <h3 class="prod-card-name">Facial Clean — Argila Branca</h3>
-            <p class="prod-card-desc">Limpador + exfoliante + máscara. Deliplus.</p>
-            <p class="prod-card-avail" data-i18n="available">Disponível</p>
-            <p class="prod-card-price">8.000 Kz</p>
-            <button class="btn btn-outline btn-sm" data-add-cart data-id="facial-clean" data-name="Facial Clean — Argila Branca" data-price="8000" data-i18n="add_cart">Adicionar ao carrinho</button>
-          </div>
-        </article>
-
-        <article class="prod-card" data-category="body">
-          <div class="prod-card-img"><img src="assets/cremes-pes.jpg" alt="Cremes para Pés" loading="lazy"></div>
-          <div class="prod-card-body">
-            <span class="prod-card-cat">Corpo</span>
-            <h3 class="prod-card-name">Cremes para Pés</h3>
-            <p class="prod-card-desc">Hidratante + Pure Urea 10%. Pack.</p>
-            <p class="prod-card-avail" data-i18n="available">Disponível</p>
-            <p class="prod-card-price">4.999 Kz</p>
-            <button class="btn btn-outline btn-sm" data-add-cart data-id="cremes-pes" data-name="Cremes para Pés" data-price="4999" data-i18n="add_cart">Adicionar ao carrinho</button>
-          </div>
-        </article>
-
-        <article class="prod-card" data-category="deo">
-          <div class="prod-card-img"><img src="assets/deo-48h.jpg" alt="Desodorante Creme 48h" loading="lazy"></div>
-          <div class="prod-card-body">
-            <span class="prod-card-cat">Desodorantes</span>
-            <h3 class="prod-card-name">Desodorante Creme 48h</h3>
-            <p class="prod-card-desc">Deliplus · 0% álcool · peles delicadas.</p>
-            <p class="prod-card-avail" data-i18n="available">Disponível</p>
-            <p class="prod-card-price">8.000 Kz</p>
-            <button class="btn btn-outline btn-sm" data-add-cart data-id="deo-48h" data-name="Desodorante Creme 48h" data-price="8000" data-i18n="add_cart">Adicionar ao carrinho</button>
-          </div>
-        </article>
-
-        <article class="prod-card" data-category="deo">
-          <div class="prod-card-img"><img src="assets/deonat.jpg" alt="Deonat Mineral" loading="lazy"></div>
-          <div class="prod-card-body">
-            <span class="prod-card-cat">Desodorantes</span>
-            <h3 class="prod-card-name">Deonat Mineral</h3>
-            <p class="prod-card-desc">Desodorante de alumbre · protecção natural.</p>
-            <p class="prod-card-avail" data-i18n="available">Disponível</p>
-            <p class="prod-card-price">8.000 Kz</p>
-            <button class="btn btn-outline btn-sm" data-add-cart data-id="deonat" data-name="Deonat Mineral" data-price="8000" data-i18n="add_cart">Adicionar ao carrinho</button>
-          </div>
-        </article>
-
-        <article class="prod-card" data-category="body">
-          <div class="prod-card-img"><img src="assets/exfoliante-coco.jpg" alt="Exfoliante Coco" loading="lazy"></div>
-          <div class="prod-card-body">
-            <span class="prod-card-cat">Corpo</span>
-            <h3 class="prod-card-name">Exfoliante Coco</h3>
-            <p class="prod-card-desc">Esfoliante corporal Deliplus.</p>
-            <p class="prod-card-avail" data-i18n="available">Disponível</p>
-            <p class="prod-card-price">10.000 Kz</p>
-            <button class="btn btn-outline btn-sm" data-add-cart data-id="exfoliante-coco" data-name="Exfoliante Coco" data-price="10000" data-i18n="add_cart">Adicionar ao carrinho</button>
-          </div>
-        </article>
-
-        <article class="prod-card" data-category="hair">
-          <div class="prod-card-img"><img src="assets/ampolas.jpg" alt="Ampolas Concentradas" loading="lazy"></div>
-          <div class="prod-card-body">
-            <span class="prod-card-cat">Cabelo</span>
-            <h3 class="prod-card-name">Ampolas Concentradas</h3>
-            <p class="prod-card-desc">Tratamento 3 semanas · Repair / Hydra / Glow.</p>
-            <p class="prod-card-avail" data-i18n="available">Disponível</p>
-            <p class="prod-card-price">12.000 Kz</p>
-            <button class="btn btn-outline btn-sm" data-add-cart data-id="ampolas" data-name="Ampolas Concentradas" data-price="12000" data-i18n="add_cart">Adicionar ao carrinho</button>
-          </div>
-        </article>
-
-        <article class="prod-card" data-category="body">
-          <div class="prod-card-img"><img src="assets/mixa-kit.jpg" alt="Kit Mixa Body Care" loading="lazy"></div>
-          <div class="prod-card-body">
-            <span class="prod-card-cat">Corpo</span>
-            <h3 class="prod-card-name">Kit Mixa Body Care</h3>
-            <p class="prod-card-desc">Urea Cica, Ceramide, Niacinamide + óleos.</p>
-            <p class="prod-card-avail" data-i18n="available">Disponível</p>
-            <p class="prod-card-price">14.500 Kz</p>
-            <button class="btn btn-outline btn-sm" data-add-cart data-id="mixa-kit" data-name="Kit Mixa Body Care" data-price="14500" data-i18n="add_cart">Adicionar ao carrinho</button>
-          </div>
-        </article>
-
-        <article class="prod-card" data-category="body">
-          <div class="prod-card-img" style="background: linear-gradient(145deg, #f5e8d0, #e8d8b8);"></div>
-          <div class="prod-card-body">
-            <span class="prod-card-cat">Corpo</span>
-            <h3 class="prod-card-name">Sem Barriga + Ultra Fina</h3>
-            <p class="prod-card-desc">Infusão natural + creme minceur 3 cm.</p>
-            <p class="prod-card-avail">Consulte</p>
-            <p class="prod-card-price">Consulte</p>
-            <a href="https://wa.me/244938565536?text=Olá!%20Quero%20saber%20sobre%20Sem%20Barriga%20e%20Ultra%20Fina" class="btn btn-outline btn-sm" target="_blank" rel="noopener" data-i18n="consult">Consultar</a>
-          </div>
-        </article>
+        <!-- Filled by js/app.js from catalog / products.js -->
       </div>
     </div>
   </main>
@@ -253,6 +159,7 @@
       <p class="copyright"><span data-i18n="footer_copy">© 2026 Marimaras Paz · Estética e Beleza</span></p>
     </div>
   </footer>
-<script src="main.js"></script>
+<script src="js/products.js"></script>
+  <script src="js/app.js"></script>
 </body>
 </html>

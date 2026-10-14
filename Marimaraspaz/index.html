@@ -40,7 +40,7 @@
   <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png">
   <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
   <link rel="manifest" href="site.webmanifest">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="css/styles.css">
 </head>
 <body class="page-home">
   <div class="announce-bar" id="announceBar">
@@ -141,7 +141,7 @@
     <!-- Hero: image first, then video -->
     <section class="hero" id="inicio">
       <div class="hero-media">
-        <img src="assets/hero.jpg" alt="Marimaras Paz" id="heroImg">
+        <img src="assets/hero.jpg" alt="Marimaras Paz" id="heroImg" data-site-img="hero">
         <video id="heroVideo" muted loop playsinline webkit-playsinline autoplay preload="auto" disablepictureinpicture>
           <source src="assets/salon-tour.mp4" type="video/mp4">
         </video>
@@ -161,7 +161,7 @@
     <!-- Store full-bleed card -->
     <section class="store-section" id="loja">
       <div class="store-card">
-        <img src="assets/loja.jpeg" alt="Marimaras Paz Loja">
+        <img src="assets/loja.jpeg" alt="Marimaras Paz Loja" data-site-img="store">
         <div class="store-card-overlay"></div>
         <div class="store-card-content">
           <h2 class="store-card-title" data-i18n="store_title">Marimaras Paz loja</h2>
@@ -464,6 +464,7 @@
       <p class="copyright"><span data-i18n="footer_copy">© 2026 Marimaras Paz · Estética e Beleza</span></p>
     </div>
   </footer>
-<script src="main.js?v=improve-1"></script>
+<script src="js/products.js"></script>
+  <script src="js/app.js"></script>
 </body>
 </html>

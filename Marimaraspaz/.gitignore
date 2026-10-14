@@ -1,0 +1,21 @@
+# macOS
+.DS_Store
+**/.DS_Store
+.AppleDouble
+.LSOverride
+
+# Editor / OS
+Thumbs.db
+*.swp
+*~
+.idea/
+.vscode/
+
+# Logs & env
+*.log
+.env
+.env.*
+
+# Optional local secrets (never commit)
+worker/.dev.vars
+**/secrets.*
