@@ -1,0 +1,21 @@
+{
+  "name": "Marimaras Paz",
+  "short_name": "Marimaras Paz",
+  "description": "Estética e Beleza — tranças, unhas, tratamentos e produtos.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FCF8F6",
+  "theme_color": "#B88992",
+  "icons": [
+    {
+      "src": "assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
