@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://marimaraspaz.workers.dev/sitemap.xml
