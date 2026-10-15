@@ -51,7 +51,10 @@
     } catch (e) {}
     try {
       const s = localStorage.getItem('mp_services_override');
-      if (s) liveServices = JSON.parse(s);
+      if (s) {
+        const parsed = JSON.parse(s);
+        if (Array.isArray(parsed) && parsed.length) liveServices = parsed;
+      }
     } catch (e) {}
   }
 

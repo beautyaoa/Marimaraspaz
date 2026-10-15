@@ -249,6 +249,20 @@ img { max-width: 100%; display: block; }
 .product-table tr:last-child td { border-bottom: none; }
 .product-table img { width: 48px; height: 48px; object-fit: cover; border-radius: 6px; background: var(--bg); }
 .product-cards { display: none; gap: 12px; }
+/* Services always use cards (no desktop table) */
+#service-cards,
+.service-cards {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 640px) {
+  #service-cards,
+  .service-cards {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  }
+}
+
 .prod-admin-card {
   background: var(--surface);
   border: 1px solid var(--line);
@@ -696,3 +710,6 @@ img { max-width: 100%; display: block; }
   background: #fff;
   min-width: 200px;
 }
+
+/* Ensure services list never hidden on desktop */
+#service-cards { display: grid !important; }

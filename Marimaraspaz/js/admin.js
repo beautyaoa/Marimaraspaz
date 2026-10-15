@@ -63,11 +63,17 @@
     seedFromDefaults();
     try {
       const p = localStorage.getItem(LS.products);
-      if (p) products = JSON.parse(p);
+      if (p) {
+        const parsed = JSON.parse(p);
+        if (Array.isArray(parsed) && parsed.length) products = parsed;
+      }
     } catch (e) {}
     try {
       const z = localStorage.getItem(LS.zones);
-      if (z) zones = JSON.parse(z);
+      if (z) {
+        const parsed = JSON.parse(z);
+        if (Array.isArray(parsed) && parsed.length) zones = parsed;
+      }
     } catch (e) {}
     try {
       const t = localStorage.getItem(LS.texts);
@@ -94,7 +100,14 @@
     } catch (e) {}
     try {
       const s = localStorage.getItem('mp_services_override');
-      if (s) services = JSON.parse(s);
+      if (s) {
+        const parsed = JSON.parse(s);
+        // Ignore empty arrays — they wipe the default list (common after early saves)
+        if (Array.isArray(parsed) && parsed.length) services = parsed;
+        else if (Array.isArray(parsed) && !parsed.length) {
+          localStorage.removeItem('mp_services_override');
+        }
+      }
     } catch (e) {}
   }
 
@@ -220,7 +233,8 @@
     if (serviceFilterCat) list = list.filter(s => s.category === serviceFilterCat);
     list.sort((a, b) => (a.category || '').localeCompare(b.category || '') || (a.name || '').localeCompare(b.name || ''));
     if (!list.length) {
-      cards.innerHTML = '<p style="color:var(--muted)">Nenhum serviço nesta categoria.</p>';
+      cards.innerHTML = '<p style="color:var(--muted)">Nenhum serviço nesta categoria.</p>' +
+        (!serviceFilterCat ? '<p style="margin-top:12px"><button type="button" class="btn btn-ghost btn-sm" id="btn-restore-services">Restaurar lista padrão</button></p>' : '');
       return;
     }
     cards.innerHTML = list.map(s => `
