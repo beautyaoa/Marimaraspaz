@@ -19,6 +19,7 @@
   let liveImages = (window.MP && MP.DEFAULT_SITE_IMAGES) ? Object.assign({}, MP.DEFAULT_SITE_IMAGES) : {};
   let liveContact = (window.MP && MP.DEFAULT_CONTACT) ? Object.assign({}, MP.DEFAULT_CONTACT) : {};
   let liveVideos = (window.MP && MP.DEFAULT_SITE_VIDEOS) ? Object.assign({}, MP.DEFAULT_SITE_VIDEOS) : {};
+  let liveServices = (window.MP && MP.SERVICES) ? JSON.parse(JSON.stringify(MP.SERVICES)) : [];
 
   function loadOverrides() {
     try {
@@ -48,6 +49,10 @@
       const v = localStorage.getItem('mp_videos_override');
       if (v) Object.assign(liveVideos, JSON.parse(v));
     } catch (e) {}
+    try {
+      const s = localStorage.getItem('mp_services_override');
+      if (s) liveServices = JSON.parse(s);
+    } catch (e) {}
   }
 
   async function fetchRemoteCatalog() {
@@ -68,6 +73,7 @@
       if (data.images) Object.assign(liveImages, data.images);
       if (data.contact) Object.assign(liveContact, data.contact);
       if (data.videos) Object.assign(liveVideos, data.videos);
+      if (Array.isArray(data.services) && data.services.length) liveServices = data.services;
     } catch (e) {
       console.warn('Catalog remote unavailable, using defaults', e);
     }
@@ -127,6 +133,93 @@
         el.textContent = liveContact.phone_display;
       });
     }
+  }
+
+
+  function getServices() { return liveServices.filter(s => s && s.active !== false); }
+
+  function formatKzSvc(n) {
+    if (n == null || isNaN(n)) return '—';
+    return Number(n).toLocaleString('pt-AO') + ' Kz';
+  }
+
+  function renderBookingServices() {
+    const acc = document.getElementById('svcAccordion');
+    if (!acc) return;
+    const cats = (window.MP && MP.SERVICE_CATEGORIES) || [];
+    const services = getServices();
+    const lang = (typeof currentLang !== 'undefined' ? currentLang : 'pt') || 'pt';
+    acc.innerHTML = cats.map((cat, idx) => {
+      const items = services.filter(s => s.category === cat.id);
+      if (!items.length) return '';
+      const title = (lang === 'en' && cat.name_en) ? cat.name_en : cat.name;
+      const open = idx === 0 ? ' is-open' : '';
+      const expanded = idx === 0 ? 'true' : 'false';
+      const options = items.map(s => {
+        const name = (lang === 'en' && s.name_en) ? s.name_en : s.name;
+        return `<label class="service-option">
+            <input type="checkbox" data-name="${String(name).replace(/"/g, '&quot;')}" data-price="${s.price || 0}" data-id="${s.id || ''}">
+            <span class="service-option-info"><span class="service-option-name">${name}</span><span class="service-option-price">${formatKzSvc(s.price)}</span></span>
+          </label>`;
+      }).join('');
+      return `<div class="svc-acc${open}" data-acc="${idx}">
+          <button type="button" class="svc-acc-header" aria-expanded="${expanded}" aria-controls="svc-panel-${idx}">
+            <span class="svc-acc-left">
+              <span class="svc-acc-title" data-i18n="${cat.i18n || ''}">${title}</span>
+              <span class="svc-acc-count" data-count="0" hidden></span>
+            </span>
+            <span class="svc-acc-right">
+              <span class="svc-acc-hint">${items.length} <span data-i18n="opts">opções</span></span>
+              <span class="svc-acc-chevron" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 9l6 6 6-6"/></svg></span>
+            </span>
+          </button>
+          <div class="svc-acc-panel" id="svc-panel-${idx}" role="region">
+            <div class="svc-acc-panel-inner">${options}</div>
+          </div>
+        </div>`;
+    }).join('');
+    // re-bind accordion if needed - click delegation on header
+    if (!acc.dataset.bound) {
+      acc.dataset.bound = '1';
+      acc.addEventListener('click', e => {
+        const btn = e.target.closest('.svc-acc-header');
+        if (!btn) return;
+        const item = btn.closest('.svc-acc');
+        if (!item) return;
+        const open = item.classList.toggle('is-open');
+        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+    }
+    if (typeof applyI18n === 'function') applyI18n(typeof currentLang !== 'undefined' ? currentLang : 'pt');
+  }
+
+  function renderHomePrices() {
+    const root = document.getElementById('servicesPriceRoot');
+    if (!root) return;
+    const cats = (window.MP && MP.SERVICE_CATEGORIES) || [];
+    const services = getServices();
+    const lang = (typeof currentLang !== 'undefined' ? currentLang : 'pt') || 'pt';
+    root.innerHTML = cats.map(cat => {
+      const items = services.filter(s => s.category === cat.id);
+      if (!items.length) return '';
+      const title = (lang === 'en' && cat.name_en) ? cat.name_en : cat.name;
+      const rows = items.map(s => {
+        const name = (lang === 'en' && s.name_en) ? s.name_en : s.name;
+        return `<div class="price-row"><span>${name}</span><span class="dots"></span><span>${formatKzSvc(s.price)}</span></div>`;
+      }).join('');
+      return `<div class="price-block">
+          <div class="price-block-header">
+            <h3 class="price-block-title" data-i18n="${cat.i18n || ''}">${title}</h3>
+          </div>
+          ${rows}
+        </div>`;
+    }).join('');
+    if (typeof applyI18n === 'function') applyI18n(typeof currentLang !== 'undefined' ? currentLang : 'pt');
+  }
+
+  function waNumber() {
+    const n = (liveContact && liveContact.whatsapp) || (window.MP && MP.WHATSAPP) || '244938565536';
+    return String(n).replace(/\D/g, '');
   }
 
   function getProducts() { return liveProducts; }
@@ -255,6 +348,7 @@
     getContact: function () { return liveContact; },
     getTexts: function () { return liveTexts; },
     getVideos: function () { return liveVideos; },
+    getServices: function () { return liveServices; },
     reloadCatalog: async function () {
       loadOverrides();
       await fetchRemoteCatalog();
@@ -263,6 +357,8 @@
       applySiteImages();
       applySiteVideos();
       applyCatalogTexts();
+      renderBookingServices();
+      renderHomePrices();
       if (typeof applyI18n === 'function') applyI18n(typeof currentLang !== 'undefined' ? currentLang : 'pt');
     }
   };
@@ -1071,7 +1167,7 @@
 
       localStorage.removeItem(CART_KEY);
       updateCartUI();
-      window.open(`https://wa.me/244938565536?text=${text}`, '_blank');
+      window.open(`https://wa.me/${waNumber()}?text=${text}`, '_blank');
       alert(t('checkout_sent'));
       checkoutForm.reset();
     });
@@ -1192,7 +1288,7 @@
       });
       text += `%0A*Total estimado:* ${formatKz(total)}`;
 
-      window.open(`https://wa.me/244938565536?text=${text}`, '_blank');
+      window.open(`https://wa.me/${waNumber()}?text=${text}`, '_blank');
     });
   }
 
@@ -1225,7 +1321,7 @@
           t('sub_msg') + raw + '.'
         );
         // Notify salon; user already consented via the form note
-        window.open('https://wa.me/244938565536?text=' + msg, '_blank');
+        window.open('https://wa.me/' + waNumber() + '?text=' + msg, '_blank');
         input.value = '';
         alert(t('sub_thanks'));
       });
@@ -1243,6 +1339,8 @@
     applySiteImages();
     applySiteVideos();
     applyCatalogTexts();
+      renderBookingServices();
+      renderHomePrices();
     if (typeof applyI18n === 'function') applyI18n(currentLang || 'pt');
   })();
 })();

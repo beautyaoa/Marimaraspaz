@@ -28,7 +28,10 @@
   let media = [];
   let contact = {};
   let videos = {};
+  let services = [];
   let editingId = null;
+  let editingServiceId = null;
+  let serviceFilterCat = '';
   let pickSlotKey = null;
   let textLang = 'pt';
 
@@ -53,6 +56,7 @@
     images = (window.MP && MP.DEFAULT_SITE_IMAGES) ? Object.assign({}, MP.DEFAULT_SITE_IMAGES) : {};
     contact = (window.MP && MP.DEFAULT_CONTACT) ? Object.assign({}, MP.DEFAULT_CONTACT) : {};
     videos = (window.MP && MP.DEFAULT_SITE_VIDEOS) ? Object.assign({}, MP.DEFAULT_SITE_VIDEOS) : {};
+    services = (window.MP && MP.SERVICES) ? JSON.parse(JSON.stringify(MP.SERVICES)) : [];
   }
 
   function loadDrafts() {
@@ -88,6 +92,10 @@
       const v = localStorage.getItem('mp_videos_override');
       if (v) Object.assign(videos, JSON.parse(v));
     } catch (e) {}
+    try {
+      const s = localStorage.getItem('mp_services_override');
+      if (s) services = JSON.parse(s);
+    } catch (e) {}
   }
 
   function saveDrafts() {
@@ -98,6 +106,7 @@
     localStorage.setItem(LS.media, JSON.stringify(media));
     localStorage.setItem('mp_contact_override', JSON.stringify(contact));
     localStorage.setItem('mp_videos_override', JSON.stringify(videos));
+    localStorage.setItem('mp_services_override', JSON.stringify(services));
     toast('Rascunho guardado neste browser');
     updateStats();
   }
@@ -109,7 +118,8 @@
       texts: texts,
       images: images,
       contact: contact,
-      videos: videos
+      videos: videos,
+      services: services
     };
   }
 
@@ -153,7 +163,7 @@
     const panel = $('#panel-' + id);
     if (panel) panel.classList.add('active');
     const labels = {
-      dashboard: 'Painel', products: 'Produtos', zones: 'Zonas',
+      dashboard: 'Painel', products: 'Produtos', services: 'Serviços', zones: 'Zonas',
       texts: 'Textos', contact: 'Contacto', images: 'Imagens',
       media: 'Média', guide: 'Guia'
     };
@@ -180,6 +190,94 @@
       const slots = (window.MP && MP.SITE_IMAGE_SLOTS) || [];
       elS.textContent = slots.length;
     }
+  }
+
+
+  function catName(id) {
+    const c = ((window.MP && MP.SERVICE_CATEGORIES) || []).find(x => x.id === id);
+    return c ? c.name : id;
+  }
+
+  function fillServiceCategorySelects() {
+    const cats = (window.MP && MP.SERVICE_CATEGORIES) || [];
+    ['svc-category', 'service-filter-cat'].forEach(id => {
+      const el = $('#' + id);
+      if (!el) return;
+      const isFilter = id === 'service-filter-cat';
+      const cur = el.value;
+      el.innerHTML = isFilter
+        ? '<option value="">Todas as categorias</option>' + cats.map(c => `<option value="${c.id}">${esc(c.name)}</option>`).join('')
+        : cats.map(c => `<option value="${c.id}">${esc(c.name)}</option>`).join('');
+      if (cur) el.value = cur;
+    });
+  }
+
+  function renderServices() {
+    fillServiceCategorySelects();
+    const cards = $('#service-cards');
+    if (!cards) return;
+    let list = services.slice();
+    if (serviceFilterCat) list = list.filter(s => s.category === serviceFilterCat);
+    list.sort((a, b) => (a.category || '').localeCompare(b.category || '') || (a.name || '').localeCompare(b.name || ''));
+    if (!list.length) {
+      cards.innerHTML = '<p style="color:var(--muted)">Nenhum serviço nesta categoria.</p>';
+      return;
+    }
+    cards.innerHTML = list.map(s => `
+      <div class="prod-admin-card" data-sid="${esc(s.id)}">
+        <div style="width:64px;height:64px;border-radius:8px;background:var(--bg);display:grid;place-items:center;font-size:.7rem;color:var(--muted);text-align:center;padding:4px">${esc(catName(s.category))}</div>
+        <div>
+          <h3>${esc(s.name)}</h3>
+          <div class="meta">${formatKz(s.price)} · ${s.active === false ? 'Inactivo' : 'Activo'}</div>
+          <div class="row-actions">
+            <button type="button" class="btn btn-ghost btn-sm" data-svc-edit="${esc(s.id)}">Editar</button>
+            <button type="button" class="btn btn-ghost btn-sm btn-danger-outline" data-svc-del="${esc(s.id)}">Apagar</button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function openServiceModal(id) {
+    editingServiceId = id || null;
+    const s = id ? services.find(x => x.id === id) : null;
+    fillServiceCategorySelects();
+    $('#svc-modal-title').textContent = s ? 'Editar serviço' : 'Novo serviço';
+    $('#svc-id').value = s ? s.id : '';
+    $('#svc-id').disabled = !!s;
+    $('#svc-name').value = s ? s.name : '';
+    $('#svc-name-en').value = s ? (s.name_en || '') : '';
+    $('#svc-price').value = s ? (s.price || '') : '';
+    $('#svc-category').value = s ? (s.category || 'nails') : 'nails';
+    $('#svc-active').checked = s ? s.active !== false : true;
+    $('#service-modal').classList.add('open');
+  }
+
+  function closeServiceModal() {
+    $('#service-modal').classList.remove('open');
+    editingServiceId = null;
+  }
+
+  function saveServiceFromForm() {
+    const id = ($('#svc-id').value || '').trim() || slug($('#svc-name').value);
+    if (!id || !$('#svc-name').value.trim()) {
+      toast('Nome obrigatório');
+      return;
+    }
+    const item = {
+      id,
+      name: $('#svc-name').value.trim(),
+      name_en: $('#svc-name-en').value.trim(),
+      price: parseInt($('#svc-price').value, 10) || 0,
+      category: $('#svc-category').value || 'nails',
+      active: $('#svc-active').checked
+    };
+    const idx = services.findIndex(x => x.id === id);
+    if (idx >= 0) services[idx] = item;
+    else services.push(item);
+    renderServices();
+    closeServiceModal();
+    toast('Serviço actualizado (ainda rascunho)');
   }
 
   // ——— Products UI ———
@@ -304,6 +402,10 @@
   }
 
   // ——— Texts ———
+  function rootField(key) {
+    return document.querySelector('#text-fields-root [data-text-key="' + key + '"]');
+  }
+
   function renderTexts() {
     const root = $('#text-fields-root');
     if (!root) return;
@@ -394,6 +496,7 @@
               </label>
               <button type="button" class="btn btn-ghost btn-sm" data-slot-pick="${s.key}">Média</button>
               <button type="button" class="btn btn-ghost btn-sm" data-slot-reset="${s.key}">Original</button>
+              <button type="button" class="btn btn-ghost btn-sm btn-danger-outline" data-slot-clear="${s.key}">Limpar</button>
             </div>
           </div>
         </div>`;
@@ -403,6 +506,42 @@
   }
 
   // ——— Videos ———
+  function posterForVideoKey(key) {
+    const map = {
+      hero: 'hero',
+      work_pedicure: 'poster_pedi',
+      work_hospitality: 'poster_hospitality',
+      work_nails: 'poster_nails'
+    };
+    const imgKey = map[key];
+    if (!imgKey) return '';
+    return (images && images[imgKey]) ||
+      (window.MP && MP.DEFAULT_SITE_IMAGES && MP.DEFAULT_SITE_IMAGES[imgKey]) || '';
+  }
+
+  function paintVideoThumbnails(root) {
+    (root || document).querySelectorAll('.slot-card-video video').forEach(vid => {
+      const paint = () => {
+        try {
+          // Seek slightly past 0 so browsers paint a real frame (0 is often black)
+          const t = Math.min(0.25, (vid.duration && isFinite(vid.duration) ? vid.duration * 0.05 : 0.25));
+          if (vid.currentTime < 0.05) {
+            vid.currentTime = t || 0.1;
+          }
+        } catch (e) {}
+      };
+      if (vid.readyState >= 1) paint();
+      else vid.addEventListener('loadedmetadata', paint, { once: true });
+      vid.addEventListener('seeked', () => {
+        vid.classList.add('has-frame');
+      }, { once: true });
+      // Fallback: if metadata never fires (bad URL), keep poster background
+      setTimeout(() => {
+        if (!vid.classList.contains('has-frame')) vid.classList.add('no-frame');
+      }, 4000);
+    });
+  }
+
   function renderVideoSlots() {
     const slots = (window.MP && MP.SITE_VIDEO_SLOTS) || [];
     const root = $('#video-slots-root');
@@ -417,10 +556,12 @@
       const cards = groups[g].map(s => {
         const url = videos[s.key] || '';
         const name = url ? url.split('/').pop().split('?')[0] : '';
+        const poster = posterForVideoKey(s.key);
+        const posterStyle = poster ? ` style="background-image:url('${poster.replace(/'/g, '%27')}')"` : '';
         return `
         <div class="slot-card slot-card-video" data-vslot="${s.key}">
-          <div class="slot-preview video-preview ${url ? '' : 'empty'}">
-            ${url ? `<video src="${url}" muted playsinline preload="metadata"></video>` : 'Sem vídeo'}
+          <div class="slot-preview video-preview ${url ? '' : 'empty'}"${posterStyle}>
+            ${url ? `<video src="${esc(url)}" muted playsinline preload="auto" playsInline></video>` : 'Sem vídeo'}
           </div>
           <div class="slot-body">
             <h4>${esc(s.label)}</h4>
@@ -431,12 +572,14 @@
                 <input type="file" accept="video/mp4,video/webm,video/quicktime,video/*" data-video-upload="${s.key}" class="hidden">
               </label>
               <button type="button" class="btn btn-ghost btn-sm" data-video-reset="${s.key}">Original</button>
+              <button type="button" class="btn btn-ghost btn-sm btn-danger-outline" data-video-clear="${s.key}">Limpar</button>
             </div>
           </div>
         </div>`;
       }).join('');
       return `<div class="slots-group"><h3>${esc(g)}</h3><div class="slots-grid">${cards}</div></div>`;
     }).join('');
+    paintVideoThumbnails(root);
   }
 
   // ——— Media library ———
@@ -457,6 +600,143 @@
       </div>
     `).join('');
     updateStats();
+  }
+
+
+  /**
+   * Compress video in-browser before Cloudinary upload.
+   * Skips if already small. Uses Canvas + MediaRecorder (WebM).
+   * Falls back to original file if compression fails or unsupported.
+   */
+  function compressVideoFile(file, opts) {
+    opts = opts || {};
+    const maxWidth = opts.maxWidth || 1280;
+    const maxHeight = opts.maxHeight || 720;
+    const videoBitsPerSecond = opts.videoBitsPerSecond || 1800000;
+    const skipUnderBytes = opts.skipUnderBytes != null ? opts.skipUnderBytes : 4 * 1024 * 1024;
+
+    if (!file || !file.type || !file.type.startsWith('video/')) {
+      return Promise.resolve(file);
+    }
+    if (file.size <= skipUnderBytes) {
+      return Promise.resolve(file);
+    }
+    if (typeof MediaRecorder === 'undefined') {
+      return Promise.resolve(file);
+    }
+
+    return new Promise((resolve) => {
+      const url = URL.createObjectURL(file);
+      const video = document.createElement('video');
+      video.muted = true;
+      video.playsInline = true;
+      video.preload = 'auto';
+      video.src = url;
+
+      const cleanup = () => {
+        try { URL.revokeObjectURL(url); } catch (e) {}
+      };
+
+      const fail = () => {
+        cleanup();
+        resolve(file);
+      };
+
+      video.onerror = fail;
+      video.onloadeddata = async () => {
+        try {
+          const vw = video.videoWidth || 1280;
+          const vh = video.videoHeight || 720;
+          let w = vw;
+          let h = vh;
+          const scale = Math.min(1, maxWidth / w, maxHeight / h);
+          w = Math.max(2, Math.round((w * scale) / 2) * 2);
+          h = Math.max(2, Math.round((h * scale) / 2) * 2);
+
+          const canvas = document.createElement('canvas');
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          if (!ctx) return fail();
+
+          const stream = canvas.captureStream(30);
+          // Try to include audio if available
+          try {
+            const vStream = video.captureStream ? video.captureStream() : (video.mozCaptureStream && video.mozCaptureStream());
+            if (vStream) {
+              vStream.getAudioTracks().forEach(tr => stream.addTrack(tr));
+            }
+          } catch (e) {}
+
+          const mimeCandidates = [
+            'video/webm;codecs=vp9,opus',
+            'video/webm;codecs=vp8,opus',
+            'video/webm;codecs=vp9',
+            'video/webm;codecs=vp8',
+            'video/webm'
+          ];
+          let mime = '';
+          for (let i = 0; i < mimeCandidates.length; i++) {
+            if (MediaRecorder.isTypeSupported(mimeCandidates[i])) {
+              mime = mimeCandidates[i];
+              break;
+            }
+          }
+          if (!mime) return fail();
+
+          const chunks = [];
+          const recorder = new MediaRecorder(stream, {
+            mimeType: mime,
+            videoBitsPerSecond: videoBitsPerSecond
+          });
+          recorder.ondataavailable = (ev) => {
+            if (ev.data && ev.data.size) chunks.push(ev.data);
+          };
+          recorder.onerror = fail;
+          recorder.onstop = () => {
+            cleanup();
+            stream.getTracks().forEach(tr => tr.stop());
+            const blob = new Blob(chunks, { type: mime.split(';')[0] });
+            if (!blob.size || blob.size >= file.size * 0.95) {
+              // No real savings — keep original
+              resolve(file);
+              return;
+            }
+            const base = (file.name || 'video').replace(/\.[^.]+$/, '');
+            const out = new File([blob], base + '-compressed.webm', { type: blob.type });
+            resolve(out);
+          };
+
+          recorder.start(250);
+          await video.play().catch(() => {});
+
+          const draw = () => {
+            if (video.ended || video.paused) {
+              try { recorder.stop(); } catch (e) { fail(); }
+              return;
+            }
+            ctx.drawImage(video, 0, 0, w, h);
+            requestAnimationFrame(draw);
+          };
+          draw();
+
+          // Safety timeout (10 min max)
+          setTimeout(() => {
+            if (recorder.state === 'recording') {
+              try { recorder.stop(); } catch (e) { fail(); }
+            }
+          }, 10 * 60 * 1000);
+        } catch (e) {
+          fail();
+        }
+      };
+    });
+  }
+
+  function formatBytes(n) {
+    if (n < 1024) return n + ' B';
+    if (n < 1024 * 1024) return (n / 1024).toFixed(0) + ' KB';
+    return (n / (1024 * 1024)).toFixed(1) + ' MB';
   }
 
   async function uploadToCloudinary(file, resourceType) {
@@ -507,6 +787,7 @@
       `Publicar na loja?\n\n` +
       `Isto actualiza o site para todos os visitantes:\n\n` +
       `• ${n} produtos\n` +
+      `• ${services.length} serviços\n` +
       `• ${z} zonas de entrega\n` +
       `• Textos (PT / EN)\n` +
       `• Contacto e horário\n` +
@@ -556,6 +837,7 @@
     localStorage.setItem(LS.media, JSON.stringify(media));
     localStorage.setItem('mp_contact_override', JSON.stringify(contact));
     localStorage.setItem('mp_videos_override', JSON.stringify(videos));
+    localStorage.setItem('mp_services_override', JSON.stringify(services));
     updateStats();
   }
 
@@ -599,6 +881,28 @@
       clearAuth();
       location.reload();
     }));
+
+
+    // Services
+    $('#btn-add-service')?.addEventListener('click', () => openServiceModal(null));
+    $('#svc-save')?.addEventListener('click', saveServiceFromForm);
+    $('#svc-cancel')?.addEventListener('click', closeServiceModal);
+    $('#service-modal')?.addEventListener('click', e => {
+      if (e.target.id === 'service-modal') closeServiceModal();
+    });
+    $('#service-filter-cat')?.addEventListener('change', e => {
+      serviceFilterCat = e.target.value;
+      renderServices();
+    });
+    document.addEventListener('click', e => {
+      const ed = e.target.closest('[data-svc-edit]');
+      if (ed) openServiceModal(ed.dataset.svcEdit);
+      const del = e.target.closest('[data-svc-del]');
+      if (del && confirm('Apagar este serviço do rascunho?')) {
+        services = services.filter(s => s.id !== del.dataset.svcDel);
+        renderServices();
+      }
+    });
 
     // Products
     $('#btn-add-product')?.addEventListener('click', () => openProductModal(null));
@@ -655,11 +959,22 @@
         const key = vinp.dataset.videoUpload;
         const file = vinp.files && vinp.files[0];
         if (!file) return;
-        toast('A enviar vídeo… (pode demorar)');
         try {
-          const url = await uploadToCloudinary(file, 'video');
+          let toUpload = file;
+          if (file.size > 4 * 1024 * 1024) {
+            toast('A comprimir vídeo… (' + formatBytes(file.size) + ')');
+            toUpload = await compressVideoFile(file);
+            if (toUpload !== file) {
+              toast('Comprimido: ' + formatBytes(file.size) + ' → ' + formatBytes(toUpload.size) + '. A enviar…');
+            } else {
+              toast('A enviar vídeo original… (pode demorar)');
+            }
+          } else {
+            toast('A enviar vídeo…');
+          }
+          const url = await uploadToCloudinary(toUpload, 'video');
           videos[key] = url;
-          media.unshift({ url, at: Date.now(), name: file.name, type: 'video' });
+          media.unshift({ url, at: Date.now(), name: toUpload.name || file.name, type: 'video' });
           localStorage.setItem(LS.media, JSON.stringify(media));
           renderVideoSlots();
           renderMedia();
@@ -686,6 +1001,7 @@
         if (def) images[key] = def;
         else delete images[key];
         renderSlots();
+        toast('Imagem restaurada ao original');
       }
       const vreset = e.target.closest('[data-video-reset]');
       if (vreset) {
@@ -694,6 +1010,47 @@
         if (def) videos[key] = def;
         else delete videos[key];
         renderVideoSlots();
+        toast('Vídeo restaurado ao original');
+      }
+      const vclear = e.target.closest('[data-video-clear]');
+      if (vclear) {
+        const key = vclear.dataset.videoClear;
+        if (!confirm('Remover este vídeo do site? (pode voltar a carregar ou usar Original)')) return;
+        delete videos[key];
+        renderVideoSlots();
+        toast('Vídeo removido do rascunho');
+      }
+      const sclear = e.target.closest('[data-slot-clear]');
+      if (sclear) {
+        const key = sclear.dataset.slotClear;
+        if (!confirm('Remover esta imagem do site? (pode voltar a carregar ou usar Original)')) return;
+        delete images[key];
+        renderSlots();
+        toast('Imagem removida do rascunho');
+      }
+      if (e.target.closest('[data-texts-restore]')) {
+        syncTextsFromDOM();
+        const defs = (window.MP && MP.DEFAULT_TEXTS && MP.DEFAULT_TEXTS[textLang]) || {};
+        texts[textLang] = Object.assign({}, defs);
+        renderTexts();
+        toast('Textos ' + textLang.toUpperCase() + ' restaurados aos padrões');
+      }
+      if (e.target.closest('[data-texts-clear]')) {
+        if (!confirm('Limpar todos os textos em ' + textLang.toUpperCase() + '?')) return;
+        syncTextsFromDOM();
+        const fields = (window.MP && MP.TEXT_FIELDS) || [];
+        texts[textLang] = texts[textLang] || {};
+        fields.forEach(g => g.keys.forEach(f => { texts[textLang][f.key] = ''; }));
+        renderTexts();
+        toast('Textos ' + textLang.toUpperCase() + ' limpos');
+      }
+      const tclear = e.target.closest('[data-text-clear-key]');
+      if (tclear) {
+        const key = tclear.dataset.textClearKey;
+        const el = rootField(key);
+        if (el) el.value = '';
+        if (texts[textLang]) texts[textLang][key] = '';
+        toast('Campo limpo');
       }
     });
 
@@ -740,6 +1097,7 @@
     $('#admin-shell').classList.add('visible');
     loadDrafts();
     renderProducts();
+    renderServices();
     renderZones();
     renderTexts();
     renderContact();
@@ -755,6 +1113,21 @@
     if (isAuthed()) {
       showApp();
       return;
+    }
+    const toggle = $('#passwordToggle');
+    const pwInput = $('#login-password');
+    if (toggle && pwInput) {
+      toggle.addEventListener('click', () => {
+        const show = pwInput.type === 'password';
+        pwInput.type = show ? 'text' : 'password';
+        toggle.setAttribute('aria-pressed', show ? 'true' : 'false');
+        toggle.setAttribute('aria-label', show ? 'Ocultar password' : 'Mostrar password');
+        toggle.setAttribute('title', show ? 'Ocultar password' : 'Mostrar password');
+        const eye = toggle.querySelector('.icon-eye');
+        const eyeOff = toggle.querySelector('.icon-eye-off');
+        if (eye) eye.classList.toggle('hidden', show);
+        if (eyeOff) eyeOff.classList.toggle('hidden', !show);
+      });
     }
     $('#login-form')?.addEventListener('submit', e => {
       e.preventDefault();

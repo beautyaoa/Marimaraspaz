@@ -17,7 +17,19 @@
       <h1>Marimaras Paz</h1>
       <p>Painel de staff — produtos, textos, imagens e publicação</p>
       <label for="login-password">Password</label>
-      <input type="password" id="login-password" autocomplete="current-password" required>
+      <div class="password-field">
+        <input type="password" id="login-password" autocomplete="current-password" required>
+        <button type="button" class="password-toggle" id="passwordToggle" aria-label="Mostrar password" aria-pressed="false" title="Mostrar password">
+          <svg class="icon-eye" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+          <svg class="icon-eye-off hidden" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+            <line x1="1" y1="1" x2="23" y2="23"/>
+          </svg>
+        </button>
+      </div>
       <p class="login-error" id="login-error"></p>
       <label class="check-row">
         <input type="checkbox" id="login-remember"> Lembrar neste dispositivo
@@ -58,6 +70,7 @@
         <button type="button" data-panel="guide">Guia do staff</button>
         <p class="nav-section-label">Loja</p>
         <button type="button" data-panel="products">Produtos</button>
+        <button type="button" data-panel="services">Serviços & preços</button>
         <button type="button" data-panel="zones">Zonas de entrega</button>
         <p class="nav-section-label">Conteúdo do site</p>
         <button type="button" data-panel="texts">Textos</button>
@@ -90,6 +103,7 @@
               <h3>Atalhos</h3>
               <div class="quick-links">
                 <button type="button" class="btn btn-ghost btn-sm" data-goto="products">Produtos</button>
+                <button type="button" class="btn btn-ghost btn-sm" data-goto="services">Serviços</button>
                 <button type="button" class="btn btn-ghost btn-sm" data-goto="texts">Textos</button>
                 <button type="button" class="btn btn-ghost btn-sm" data-goto="images">Imagens</button>
                 <button type="button" class="btn btn-ghost btn-sm" data-goto="contact">Contacto</button>
@@ -115,6 +129,22 @@
             <tbody id="product-tbody"></tbody>
           </table>
           <div class="product-cards" id="product-cards"></div>
+        </section>
+
+        <section class="panel" id="panel-services">
+          <div class="panel-head">
+            <div>
+              <h2>Serviços & preços</h2>
+              <p class="lead">Lista do agendamento e da tabela de preços no site. Preços em Kz.</p>
+            </div>
+            <button type="button" class="btn btn-primary btn-sm" id="btn-add-service">+ Novo serviço</button>
+          </div>
+          <div class="toolbar">
+            <select id="service-filter-cat" class="filter-select">
+              <option value="">Todas as categorias</option>
+            </select>
+          </div>
+          <div class="product-cards" id="service-cards"></div>
         </section>
 
         <section class="panel" id="panel-zones">
@@ -200,22 +230,42 @@
           <div class="guide">
             <h3>Rascunho vs Publicar</h3>
             <ul>
-              <li><strong>Guardar rascunho</strong> — só este telemóvel/browser.</li>
-              <li><strong>Publicar</strong> — todos os clientes vêem no próximo refresh.</li>
+              <li><strong>Guardar rascunho</strong> — só neste telemóvel/browser. Útil para pré-visualizar o site no mesmo aparelho.</li>
+              <li><strong>Publicar</strong> — envia tudo para a cloud; todos os clientes vêem no próximo carregamento da página.</li>
+              <li>É preciso a password de admin ao publicar.</li>
             </ul>
             <h3>O que pode editar</h3>
             <ul>
-              <li><strong>Produtos</strong> — nome, preço, foto, categoria, disponibilidade.</li>
-              <li><strong>Zonas</strong> — taxas de entrega.</li>
-              <li><strong>Textos</strong> — anúncio, hero, sobre, trabalhos, CTAs (PT e EN).</li>
-              <li><strong>Contacto</strong> — telefone, WhatsApp, horário, localização.</li>
-              <li><strong>Imagens</strong> — heroes, logo, loja, posters.</li>
-              <li><strong>Vídeos</strong> — hero do salão e vídeos de trabalhos.</li>
+              <li><strong>Produtos</strong> — nome (PT/EN), descrição, preço, foto, categoria, disponibilidade. Apagar remove do rascunho.</li>
+              <li><strong>Serviços &amp; preços</strong> — lista do agendamento e da tabela de preços no site. Adicionar, editar preço, categoria ou apagar. Filtrar por categoria.</li>
+              <li><strong>Zonas de entrega</strong> — nome da zona e taxa em Kz.</li>
+              <li><strong>Textos</strong> — anúncio, hero, loja, trabalhos, sobre, CTAs em PT e EN. Por campo: <em>Limpar</em>. Por idioma: <em>Restaurar padrões</em> ou <em>Limpar todos</em>.</li>
+              <li><strong>Contacto &amp; horário</strong> — telefone visível, WhatsApp (com 244), horário, localização, email.</li>
+              <li><strong>Imagens do site</strong> — heroes, logo, loja, posters. <em>Carregar</em> / <em>Média</em> / <em>Original</em> (volta ao ficheiro por defeito) / <em>Limpar</em> (remove a imagem do slot).</li>
+              <li><strong>Vídeos</strong> — hero (tour do salão) e vídeos de trabalhos. <em>Carregar</em> / <em>Original</em> / <em>Limpar</em>. Ficheiros &gt; ~4 MB são comprimidos no telemóvel antes do envio.</li>
+              <li><strong>Biblioteca de média</strong> — uploads neste browser. ✕ remove só da lista (não apaga no Cloudinary).</li>
+            </ul>
+            <h3>Login</h3>
+            <ul>
+              <li>No ecrã de entrada, o ícone do olho <strong>mostra ou oculta</strong> a password.</li>
+              <li>Pode marcar «Lembrar neste dispositivo».</li>
             </ul>
             <h3>Telemóvel</h3>
             <ul>
-              <li>Menu ☰ no canto superior esquerdo.</li>
-              <li>Botões Guardar / Publicar fixos em baixo.</li>
+              <li>Menu ☰ no canto superior esquerdo (gaveta).</li>
+              <li>Botões <strong>Guardar</strong> e <strong>Publicar</strong> fixos em baixo.</li>
+              <li>«Ver site» abre a loja noutro separador.</li>
+            </ul>
+            <h3>Se algo falhar</h3>
+            <ul>
+              <li>Upload de imagem/vídeo: confirme o preset Cloudinary <code>marimaraspaz_media</code> (unsigned).</li>
+              <li>Publicar: verifique a password e a ligação à internet; se continuar a falhar, contacte o programador.</li>
+              <li>Alterações só no rascunho e não no site público → falta carregar em <strong>Publicar</strong>.</li>
+            </ul>
+            <h3>Segurança</h3>
+            <ul>
+              <li>Não partilhe a password do painel em grupos públicos.</li>
+              <li>Altere a password depois da entrega, se ainda for a predefinida.</li>
             </ul>
           </div>
         </section>
@@ -225,6 +275,32 @@
     <div class="sticky-actions">
       <button type="button" class="btn btn-ghost" data-action="save">Guardar</button>
       <button type="button" class="btn btn-primary" data-action="publish">Publicar</button>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="service-modal">
+    <div class="modal">
+      <h3 id="svc-modal-title">Serviço</h3>
+      <div class="field">
+        <label>ID (único)</label>
+        <input type="text" id="svc-id" placeholder="ex: softgel">
+      </div>
+      <div class="field-row">
+        <div class="field"><label>Nome (PT)</label><input type="text" id="svc-name"></div>
+        <div class="field"><label>Nome (EN)</label><input type="text" id="svc-name-en"></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label>Preço (Kz)</label><input type="number" id="svc-price" inputmode="decimal" min="0" step="1"></div>
+        <div class="field">
+          <label>Categoria</label>
+          <select id="svc-category"></select>
+        </div>
+      </div>
+      <label class="check-row"><input type="checkbox" id="svc-active" checked> Activo (visível no site)</label>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-primary" id="svc-save">Guardar</button>
+        <button type="button" class="btn btn-ghost" id="svc-cancel">Cancelar</button>
+      </div>
     </div>
   </div>
 

@@ -238,3 +238,483 @@ MP.TEXT_FIELDS = [
     { key: 'cta_shop', label: 'Botão comprar', multiline: false }
   ]}
 ];
+
+MP.SERVICE_CATEGORIES = [
+  { id: 'kids', name: 'Tranças para Crianças', name_en: "Kids' braids", i18n: 'cat_kids' },
+  { id: 'treat', name: 'Tratamentos', name_en: 'Treatments', i18n: 'cat_treat' },
+  { id: 'braids', name: 'Tranças (Adultos)', name_en: 'Braids (Adults)', i18n: 'cat_braids_adult' },
+  { id: 'ext', name: 'Alongamentos', name_en: 'Extensions', i18n: 'cat_ext' },
+  { id: 'nails', name: 'Unhas', name_en: 'Nails', i18n: 'cat_nails' }
+];
+
+MP.SERVICES = [
+  {
+    "id": "pochinho-de-trancas",
+    "name": "Pochinho de tranças",
+    "price": 6000,
+    "category": "kids",
+    "active": true
+  },
+  {
+    "id": "bobs-s",
+    "name": "Bobs S",
+    "price": 4000,
+    "category": "kids",
+    "active": true
+  },
+  {
+    "id": "bobs-c",
+    "name": "Bobs C",
+    "price": 8000,
+    "category": "kids",
+    "active": true
+  },
+  {
+    "id": "bobs-viradas",
+    "name": "Bobs + Viradas",
+    "price": 6000,
+    "category": "kids",
+    "active": true
+  },
+  {
+    "id": "cordoletes-s",
+    "name": "Cordoletes S",
+    "price": 6000,
+    "category": "kids",
+    "active": true
+  },
+  {
+    "id": "cordoletes-c",
+    "name": "Cordoletes C",
+    "price": 12000,
+    "category": "kids",
+    "active": true
+  },
+  {
+    "id": "pochinho-trabalhado-criancas",
+    "name": "Pochinho Trabalhado (crianças)",
+    "price": 5000,
+    "category": "kids",
+    "active": true
+  },
+  {
+    "id": "extras-bolinhas",
+    "name": "Extras Bolinhas",
+    "price": 2000,
+    "category": "kids",
+    "active": true
+  },
+  {
+    "id": "extras-punhos",
+    "name": "Extras Punhos",
+    "price": 1000,
+    "category": "kids",
+    "active": true
+  },
+  {
+    "id": "lavagem",
+    "name": "Lavagem",
+    "price": 3000,
+    "category": "treat",
+    "active": true
+  },
+  {
+    "id": "desfiliso-c",
+    "name": "Desfiliso C",
+    "price": 8000,
+    "category": "treat",
+    "active": true
+  },
+  {
+    "id": "desfiliso-s",
+    "name": "Desfiliso S",
+    "price": 5000,
+    "category": "treat",
+    "active": true
+  },
+  {
+    "id": "breche",
+    "name": "Breche",
+    "price": 6000,
+    "category": "treat",
+    "active": true
+  },
+  {
+    "id": "dedoliso",
+    "name": "Dedoliso",
+    "price": 8000,
+    "category": "treat",
+    "active": true
+  },
+  {
+    "id": "pintura-s",
+    "name": "Pintura S",
+    "price": 5000,
+    "category": "treat",
+    "active": true
+  },
+  {
+    "id": "pintura-c",
+    "name": "Pintura C",
+    "price": 7000,
+    "category": "treat",
+    "active": true
+  },
+  {
+    "id": "fitagem-c",
+    "name": "Fitagem C",
+    "price": 5000,
+    "category": "treat",
+    "active": true
+  },
+  {
+    "id": "fitagem-s",
+    "name": "Fitagem S",
+    "price": 3000,
+    "category": "treat",
+    "active": true
+  },
+  {
+    "id": "tratar-peruca-lisa",
+    "name": "Tratar peruca lisa",
+    "price": 8000,
+    "category": "treat",
+    "active": true
+  },
+  {
+    "id": "tratar-peruca-cacheada",
+    "name": "Tratar peruca cacheada",
+    "price": 7000,
+    "category": "treat",
+    "active": true
+  },
+  {
+    "id": "meter-rolos",
+    "name": "Meter rolos",
+    "price": 8000,
+    "category": "treat",
+    "active": true
+  },
+  {
+    "id": "bobs-americano-normal-m",
+    "name": "Bobs americano normal M",
+    "price": 16000,
+    "category": "braids",
+    "active": true
+  },
+  {
+    "id": "bobs-americano-normal-c",
+    "name": "Bobs americano normal C",
+    "price": 18000,
+    "category": "braids",
+    "active": true
+  },
+  {
+    "id": "bobs-americano-com-sanguita-m",
+    "name": "Bobs americano com sanguita M",
+    "price": 18000,
+    "category": "braids",
+    "active": true
+  },
+  {
+    "id": "bobs-americano-com-sanguita-c",
+    "name": "Bobs americano com sanguita C",
+    "price": 20000,
+    "category": "braids",
+    "active": true
+  },
+  {
+    "id": "bobs-americano-com-cachos-s",
+    "name": "Bobs americano com cachos S",
+    "price": 15000,
+    "category": "braids",
+    "active": true
+  },
+  {
+    "id": "bobs-americano-com-cachos-m",
+    "name": "Bobs americano com cachos M",
+    "price": 18000,
+    "category": "braids",
+    "active": true
+  },
+  {
+    "id": "bobs-americano-com-cachos-c",
+    "name": "Bobs americano com cachos C",
+    "price": 20000,
+    "category": "braids",
+    "active": true
+  },
+  {
+    "id": "cordoletes-m",
+    "name": "Cordoletes M",
+    "price": 17000,
+    "category": "braids",
+    "active": true
+  },
+  {
+    "id": "cordoletes-c-adultos",
+    "name": "Cordoletes C (adultos)",
+    "price": 20000,
+    "category": "braids",
+    "active": true
+  },
+  {
+    "id": "cordoletes-c-cachos",
+    "name": "Cordoletes c/ Cachos",
+    "price": 20000,
+    "category": "braids",
+    "active": true
+  },
+  {
+    "id": "d-mao",
+    "name": "D mão",
+    "price": 13000,
+    "category": "braids",
+    "active": true
+  },
+  {
+    "id": "twists-m",
+    "name": "Twists M",
+    "price": 17000,
+    "category": "braids",
+    "active": true
+  },
+  {
+    "id": "twists-c",
+    "name": "Twists C",
+    "price": 20000,
+    "category": "braids",
+    "active": true
+  },
+  {
+    "id": "rasta-m",
+    "name": "Rasta M",
+    "price": 20000,
+    "category": "braids",
+    "active": true
+  },
+  {
+    "id": "rasta-c",
+    "name": "Rasta C",
+    "price": 22000,
+    "category": "braids",
+    "active": true
+  },
+  {
+    "id": "dreds-m",
+    "name": "Dreds M",
+    "price": 20000,
+    "category": "braids",
+    "active": true
+  },
+  {
+    "id": "dreds-c",
+    "name": "Dreds C",
+    "price": 23000,
+    "category": "braids",
+    "active": true
+  },
+  {
+    "id": "viradas-3mil",
+    "name": "Viradas 3mil",
+    "price": 3000,
+    "category": "braids",
+    "active": true
+  },
+  {
+    "id": "viradas-8mil",
+    "name": "Viradas 8mil",
+    "price": 8000,
+    "category": "braids",
+    "active": true
+  },
+  {
+    "id": "alongamento-capilar-c-12-5",
+    "name": "Alongamento capilar C 12.5",
+    "price": 12500,
+    "category": "ext",
+    "active": true
+  },
+  {
+    "id": "alongamento-capilar-m",
+    "name": "Alongamento capilar M",
+    "price": 15000,
+    "category": "ext",
+    "active": true
+  },
+  {
+    "id": "alongamento-capilar-c-20",
+    "name": "Alongamento capilar C 20",
+    "price": 20000,
+    "category": "ext",
+    "active": true
+  },
+  {
+    "id": "xoxo-d-corte",
+    "name": "Xoxo d corte",
+    "price": 10000,
+    "category": "ext",
+    "active": true
+  },
+  {
+    "id": "xoxo-aplicacao-c",
+    "name": "Xoxo aplicação C",
+    "price": 12000,
+    "category": "ext",
+    "active": true
+  },
+  {
+    "id": "xoxo-aplicacao-m",
+    "name": "Xoxo aplicação M",
+    "price": 16000,
+    "category": "ext",
+    "active": true
+  },
+  {
+    "id": "xoxo-aplicacao-c-20",
+    "name": "Xoxo aplicação C 20",
+    "price": 20000,
+    "category": "ext",
+    "active": true
+  },
+  {
+    "id": "aplicacao-de-costura",
+    "name": "Aplicação de costura",
+    "price": 8000,
+    "category": "ext",
+    "active": true
+  },
+  {
+    "id": "aplicacao-chocolate-m",
+    "name": "Aplicação chocolate M",
+    "price": 12000,
+    "category": "ext",
+    "active": true
+  },
+  {
+    "id": "aplicacao-chocolate-c",
+    "name": "Aplicação chocolate C",
+    "price": 15000,
+    "category": "ext",
+    "active": true
+  },
+  {
+    "id": "intercalando-c",
+    "name": "Intercalando C",
+    "price": 10000,
+    "category": "ext",
+    "active": true
+  },
+  {
+    "id": "intercalando-s",
+    "name": "Intercalando S",
+    "price": 5000,
+    "category": "ext",
+    "active": true
+  },
+  {
+    "id": "pochinho-c-fronte",
+    "name": "Pochinho c/ fronte",
+    "price": 15000,
+    "category": "ext",
+    "active": true
+  },
+  {
+    "id": "pochinho-trabalhado",
+    "name": "Pochinho trabalhado",
+    "price": 10000,
+    "category": "ext",
+    "active": true
+  },
+  {
+    "id": "mao-basica",
+    "name": "Mão (básica)",
+    "price": 1500,
+    "category": "nails",
+    "active": true
+  },
+  {
+    "id": "pe-basico",
+    "name": "Pé (básico)",
+    "price": 1500,
+    "category": "nails",
+    "active": true
+  },
+  {
+    "id": "pedicure",
+    "name": "Pedicure",
+    "price": 5000,
+    "category": "nails",
+    "active": true
+  },
+  {
+    "id": "gelinho",
+    "name": "Gelinho",
+    "price": 2000,
+    "category": "nails",
+    "active": true
+  },
+  {
+    "id": "unhas-de-gel",
+    "name": "Unhas de gel",
+    "price": 3500,
+    "category": "nails",
+    "active": true
+  },
+  {
+    "id": "softgel",
+    "name": "Softgel",
+    "price": 5000,
+    "category": "nails",
+    "active": true
+  },
+  {
+    "id": "unhas-polygel",
+    "name": "Unhas polygel",
+    "price": 6000,
+    "category": "nails",
+    "active": true
+  },
+  {
+    "id": "unhas-de-porcelana",
+    "name": "Unhas de porcelana",
+    "price": 7000,
+    "category": "nails",
+    "active": true
+  },
+  {
+    "id": "moldfi",
+    "name": "MoldFI",
+    "price": 6500,
+    "category": "nails",
+    "active": true
+  },
+  {
+    "id": "pedraria",
+    "name": "Pedraria",
+    "price": 1000,
+    "category": "nails",
+    "active": true
+  },
+  {
+    "id": "remocao",
+    "name": "Remoção",
+    "price": 1500,
+    "category": "nails",
+    "active": true
+  },
+  {
+    "id": "manutencao",
+    "name": "Manutenção",
+    "price": 3000,
+    "category": "nails",
+    "active": true
+  },
+  {
+    "id": "construcao",
+    "name": "Construção",
+    "price": 1500,
+    "category": "nails",
+    "active": true
+  }
+];

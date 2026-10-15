@@ -43,11 +43,14 @@ Published file: `catalog.json` on Cloudinary (fixed public_id, e.g. `{folder}/ca
 
 ```json
 {
-  "updatedAt": "2026-10-14T21:00:00.000Z",
-  "products": [ { "id": "…", "name": "…", "price": 3500, "image": "…", … } ],
-  "zones":    [ { "name": "Talatona", "price": 2000 } ],
-  "texts":    { "pt": { "heroTitle": "…" }, "en": { "heroTitle": "…" } },
-  "images":   { "hero": "https://…", "promo": "https://…", "cat_pele": "…" }
+  "updatedAt": "2026-10-15T00:00:00.000Z",
+  "products":  [ { "id": "…", "name": "…", "price": 3500, "image": "…", … } ],
+  "services":  [ { "id": "…", "name": "…", "price": 5000, "category": "nails", "active": true } ],
+  "zones":     [ { "name": "Talatona", "price": 2000 } ],
+  "texts":     { "pt": { "hero_title": "…" }, "en": { "hero_title": "…" } },
+  "images":    { "hero": "https://…", "store": "https://…" },
+  "videos":    { "hero": "https://…", "work_nails": "https://…" },
+  "contact":   { "phone_display": "…", "whatsapp": "244…", "hours": "…", "place": "…" }
 }
 ```
 
