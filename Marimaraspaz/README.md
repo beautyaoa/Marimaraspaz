@@ -25,6 +25,7 @@ Architecture: `BLUEPRINT.md` — static site, Cloudinary catalog, Cloudflare Wor
 | **Textos** | Announce bar, hero, store, works, products subtitle, about, CTAs — **PT + EN** |
 | **Contacto & horário** | Phone display, WhatsApp number, hours, location, email |
 | **Imagens do site** | Heroes (home/products/about/booking), logo, store, about photo, work posters |
+| **Vídeos** | Hero salon tour + works videos (pedicure, hospitality, nails) |
 | **Biblioteca de média** | Upload to Cloudinary; assign to products or site slots |
 
 Flow: edit → **Guardar rascunho** (same browser preview) → **Publicar** (everyone).

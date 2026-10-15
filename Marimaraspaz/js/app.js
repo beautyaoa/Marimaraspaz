@@ -18,6 +18,7 @@
   let liveTexts = (window.MP && MP.DEFAULT_TEXTS) ? JSON.parse(JSON.stringify(MP.DEFAULT_TEXTS)) : { pt: {}, en: {} };
   let liveImages = (window.MP && MP.DEFAULT_SITE_IMAGES) ? Object.assign({}, MP.DEFAULT_SITE_IMAGES) : {};
   let liveContact = (window.MP && MP.DEFAULT_CONTACT) ? Object.assign({}, MP.DEFAULT_CONTACT) : {};
+  let liveVideos = (window.MP && MP.DEFAULT_SITE_VIDEOS) ? Object.assign({}, MP.DEFAULT_SITE_VIDEOS) : {};
 
   function loadOverrides() {
     try {
@@ -43,6 +44,10 @@
       const c = localStorage.getItem('mp_contact_override');
       if (c) Object.assign(liveContact, JSON.parse(c));
     } catch (e) {}
+    try {
+      const v = localStorage.getItem('mp_videos_override');
+      if (v) Object.assign(liveVideos, JSON.parse(v));
+    } catch (e) {}
   }
 
   async function fetchRemoteCatalog() {
@@ -62,9 +67,36 @@
       }
       if (data.images) Object.assign(liveImages, data.images);
       if (data.contact) Object.assign(liveContact, data.contact);
+      if (data.videos) Object.assign(liveVideos, data.videos);
     } catch (e) {
       console.warn('Catalog remote unavailable, using defaults', e);
     }
+  }
+
+  function applySiteVideos() {
+    // Hero source
+    document.querySelectorAll('[data-site-video]').forEach(el => {
+      const key = el.getAttribute('data-site-video');
+      const url = liveVideos[key];
+      if (!url) return;
+      if (el.tagName === 'SOURCE') {
+        el.src = url;
+        const vid = el.parentElement;
+        if (vid && vid.tagName === 'VIDEO') {
+          try { vid.load(); } catch (e) {}
+        }
+      } else if (el.tagName === 'VIDEO') {
+        el.src = url;
+        try { el.load(); } catch (e) {}
+      } else if (el.hasAttribute('data-video') || el.classList.contains('works-slide-video') || el.classList.contains('works-card-video')) {
+        el.setAttribute('data-video', url);
+      }
+    });
+    // Also map known keys onto elements with matching data-site-video-key on parents
+    document.querySelectorAll('[data-site-video-key]').forEach(el => {
+      const key = el.getAttribute('data-site-video-key');
+      if (liveVideos[key]) el.setAttribute('data-video', liveVideos[key]);
+    });
   }
 
   function applyCatalogTexts() {
@@ -222,12 +254,14 @@
     getProducts, getZones, getSiteImages, getCart, formatKz, renderProductsGrid, applySiteImages,
     getContact: function () { return liveContact; },
     getTexts: function () { return liveTexts; },
+    getVideos: function () { return liveVideos; },
     reloadCatalog: async function () {
       loadOverrides();
       await fetchRemoteCatalog();
       loadOverrides();
       renderProductsGrid();
       applySiteImages();
+      applySiteVideos();
       applyCatalogTexts();
       if (typeof applyI18n === 'function') applyI18n(typeof currentLang !== 'undefined' ? currentLang : 'pt');
     }
@@ -1207,6 +1241,7 @@
     loadOverrides(); // same-browser admin drafts win
     renderProductsGrid();
     applySiteImages();
+    applySiteVideos();
     applyCatalogTexts();
     if (typeof applyI18n === 'function') applyI18n(currentLang || 'pt');
   })();

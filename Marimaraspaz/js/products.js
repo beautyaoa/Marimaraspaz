@@ -192,6 +192,20 @@ MP.DEFAULT_CONTACT = {
   email: ''
 };
 
+MP.DEFAULT_SITE_VIDEOS = {
+  hero: 'assets/salon-tour.mp4',
+  work_pedicure: 'assets/work-pedicure.mp4',
+  work_hospitality: 'assets/work-hospitality.mp4',
+  work_nails: 'assets/work-nails-stiletto.mp4'
+};
+
+MP.SITE_VIDEO_SLOTS = [
+  { key: 'hero', label: 'Vídeo hero (tour do salão)', group: 'Home', accept: 'video/*' },
+  { key: 'work_pedicure', label: 'Vídeo pedicure', group: 'Trabalhos', accept: 'video/*' },
+  { key: 'work_hospitality', label: 'Vídeo hospitalidade', group: 'Trabalhos', accept: 'video/*' },
+  { key: 'work_nails', label: 'Vídeo unhas / stiletto', group: 'Trabalhos', accept: 'video/*' }
+];
+
 /** Field definitions for admin text editor (group + keys). */
 MP.TEXT_FIELDS = [
   { group: 'Barra / anúncio', keys: [

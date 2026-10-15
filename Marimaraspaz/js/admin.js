@@ -27,6 +27,7 @@
   let images = {};
   let media = [];
   let contact = {};
+  let videos = {};
   let editingId = null;
   let pickSlotKey = null;
   let textLang = 'pt';
@@ -51,6 +52,7 @@
     texts = (window.MP && MP.DEFAULT_TEXTS) ? JSON.parse(JSON.stringify(MP.DEFAULT_TEXTS)) : { pt: {}, en: {} };
     images = (window.MP && MP.DEFAULT_SITE_IMAGES) ? Object.assign({}, MP.DEFAULT_SITE_IMAGES) : {};
     contact = (window.MP && MP.DEFAULT_CONTACT) ? Object.assign({}, MP.DEFAULT_CONTACT) : {};
+    videos = (window.MP && MP.DEFAULT_SITE_VIDEOS) ? Object.assign({}, MP.DEFAULT_SITE_VIDEOS) : {};
   }
 
   function loadDrafts() {
@@ -82,6 +84,10 @@
       const c = localStorage.getItem('mp_contact_override');
       if (c) Object.assign(contact, JSON.parse(c));
     } catch (e) {}
+    try {
+      const v = localStorage.getItem('mp_videos_override');
+      if (v) Object.assign(videos, JSON.parse(v));
+    } catch (e) {}
   }
 
   function saveDrafts() {
@@ -91,6 +97,7 @@
     localStorage.setItem(LS.images, JSON.stringify(images));
     localStorage.setItem(LS.media, JSON.stringify(media));
     localStorage.setItem('mp_contact_override', JSON.stringify(contact));
+    localStorage.setItem('mp_videos_override', JSON.stringify(videos));
     toast('Rascunho guardado neste browser');
     updateStats();
   }
@@ -101,7 +108,8 @@
       zones: zones,
       texts: texts,
       images: images,
-      contact: contact
+      contact: contact,
+      videos: videos
     };
   }
 
@@ -394,6 +402,43 @@
     }).join('');
   }
 
+  // ——— Videos ———
+  function renderVideoSlots() {
+    const slots = (window.MP && MP.SITE_VIDEO_SLOTS) || [];
+    const root = $('#video-slots-root');
+    if (!root) return;
+    const groups = {};
+    slots.forEach(s => {
+      const g = s.group || 'Geral';
+      if (!groups[g]) groups[g] = [];
+      groups[g].push(s);
+    });
+    root.innerHTML = Object.keys(groups).map(g => {
+      const cards = groups[g].map(s => {
+        const url = videos[s.key] || '';
+        const name = url ? url.split('/').pop().split('?')[0] : '';
+        return `
+        <div class="slot-card slot-card-video" data-vslot="${s.key}">
+          <div class="slot-preview video-preview ${url ? '' : 'empty'}">
+            ${url ? `<video src="${url}" muted playsinline preload="metadata"></video>` : 'Sem vídeo'}
+          </div>
+          <div class="slot-body">
+            <h4>${esc(s.label)}</h4>
+            <p class="meta" style="font-size:.75rem;color:var(--muted);word-break:break-all">${esc(name)}</p>
+            <div class="slot-actions">
+              <label class="btn btn-ghost btn-sm">
+                Carregar
+                <input type="file" accept="video/mp4,video/webm,video/quicktime,video/*" data-video-upload="${s.key}" class="hidden">
+              </label>
+              <button type="button" class="btn btn-ghost btn-sm" data-video-reset="${s.key}">Original</button>
+            </div>
+          </div>
+        </div>`;
+      }).join('');
+      return `<div class="slots-group"><h3>${esc(g)}</h3><div class="slots-grid">${cards}</div></div>`;
+    }).join('');
+  }
+
   // ——— Media library ———
   function renderMedia() {
     const grid = $('#media-grid');
@@ -414,12 +459,13 @@
     updateStats();
   }
 
-  async function uploadToCloudinary(file) {
+  async function uploadToCloudinary(file, resourceType) {
+    const type = resourceType || (file.type && file.type.startsWith('video/') ? 'video' : 'image');
     const fd = new FormData();
     fd.append('file', file);
     fd.append('upload_preset', unsignedPreset);
     fd.append('folder', folder);
-    const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+    const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/${type}/upload`, {
       method: 'POST',
       body: fd
     });
@@ -457,7 +503,17 @@
     const catalog = buildCatalog();
     const n = products.length;
     const z = zones.length;
-    if (!confirm(`Publicar na loja?\n\n• ${n} produtos\n• ${z} zonas\n• textos + imagens do site\n\nTodos os visitantes verão estas alterações.`)) return;
+    if (!confirm(
+      `Publicar na loja?\n\n` +
+      `Isto actualiza o site para todos os visitantes:\n\n` +
+      `• ${n} produtos\n` +
+      `• ${z} zonas de entrega\n` +
+      `• Textos (PT / EN)\n` +
+      `• Contacto e horário\n` +
+      `• Imagens do site\n` +
+      `• Vídeos\n\n` +
+      `Continuar?`
+    )) return;
 
     const password = prompt('Password de admin para publicar:') || '';
     if (!password) return;
@@ -499,6 +555,7 @@
     localStorage.setItem(LS.images, JSON.stringify(images));
     localStorage.setItem(LS.media, JSON.stringify(media));
     localStorage.setItem('mp_contact_override', JSON.stringify(contact));
+    localStorage.setItem('mp_videos_override', JSON.stringify(videos));
     updateStats();
   }
 
@@ -587,10 +644,32 @@
     // Site image slots
     document.addEventListener('change', async e => {
       const inp = e.target.closest('[data-slot-upload]');
-      if (!inp) return;
-      const key = inp.dataset.slotUpload;
-      await handleFileUpload(inp.files && inp.files[0], key);
-      inp.value = '';
+      if (inp) {
+        const key = inp.dataset.slotUpload;
+        await handleFileUpload(inp.files && inp.files[0], key);
+        inp.value = '';
+        return;
+      }
+      const vinp = e.target.closest('[data-video-upload]');
+      if (vinp) {
+        const key = vinp.dataset.videoUpload;
+        const file = vinp.files && vinp.files[0];
+        if (!file) return;
+        toast('A enviar vídeo… (pode demorar)');
+        try {
+          const url = await uploadToCloudinary(file, 'video');
+          videos[key] = url;
+          media.unshift({ url, at: Date.now(), name: file.name, type: 'video' });
+          localStorage.setItem(LS.media, JSON.stringify(media));
+          renderVideoSlots();
+          renderMedia();
+          toast('Vídeo enviado');
+        } catch (err) {
+          console.error(err);
+          toast('Falha no upload de vídeo. Verifique o preset e o tamanho do ficheiro.');
+        }
+        vinp.value = '';
+      }
     });
     document.addEventListener('click', e => {
       const pick = e.target.closest('[data-slot-pick]');
@@ -607,6 +686,14 @@
         if (def) images[key] = def;
         else delete images[key];
         renderSlots();
+      }
+      const vreset = e.target.closest('[data-video-reset]');
+      if (vreset) {
+        const key = vreset.dataset.videoReset;
+        const def = (window.MP && MP.DEFAULT_SITE_VIDEOS && MP.DEFAULT_SITE_VIDEOS[key]) || '';
+        if (def) videos[key] = def;
+        else delete videos[key];
+        renderVideoSlots();
       }
     });
 
@@ -657,6 +744,7 @@
     renderTexts();
     renderContact();
     renderSlots();
+    renderVideoSlots();
     renderMedia();
     updateStats();
     showPanel('dashboard');
